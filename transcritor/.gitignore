@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+ambiente/
+python-portatil/
+*.zip
+get-pip.py
