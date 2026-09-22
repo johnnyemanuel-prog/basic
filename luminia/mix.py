@@ -2,6 +2,8 @@
 
 Cada item: (arquivo, início na timeline em s, filtros extras aplicados ao clipe).
 Os filtros extras rodam antes do atraso, então tempos de fade são relativos ao clipe.
+Os inícios seguem o momento real em que cada card aparece no v04 (medido nos quadros),
+que em alguns pontos difere 1 s do script.
 """
 import os
 import subprocess
@@ -26,33 +28,33 @@ TRACKS = [
     ("amb_multidao.mp3", 0.0, "atrim=0:12,volume=0.7,afade=t=out:st=3:d=9"),
     # --- Cena 2+3: delegacia / mendigo
     ("amb_drone.mp3", 12.0, "aloop=loop=-1:size=2147483647,atrim=0:60,volume=0.35,afade=t=in:d=1,afade=t=out:st=58.5:d=1.5"),
-    ("v_mendigo1.mp3", 18.2, "volume=1.0"),
+    ("v_mendigo1.mp3", 19.2, "volume=1.0"),
     ("enzo_preview.mp3", 34.2, ENZO_1),
     ("sfx_beeps.mp3", 40.0, "volume=0.5,afade=t=out:st=9.5:d=1.5"),
     ("enzo_preview.mp3", 51.2, ENZO_2),
-    ("v_mendigo2.mp3", 57.2, "volume=1.0"),
+    ("v_mendigo2.mp3", 56.2, "volume=1.0"),
     ("sfx_drone_perto.mp3", 62.0, "volume=0.6"),
-    ("enzo_preview.mp3", 64.2, ENZO_3),
+    ("enzo_preview.mp3", 65.2, ENZO_3),
     # --- Cena 4: música pop dos fones domina; pensamento abafado por baixo
     ("mus_pop.mp3", 72.0, "atrim=0:12,volume=0.9,afade=t=in:d=0.3,afade=t=out:st=7:d=5"),
     ("v_enzo_pensamento.mp3", 72.8, "lowpass=f=900,highpass=f=150,aecho=0.8:0.6:40:0.3,volume=0.55"),
     # --- Cena 5: closet, ventilação de leito até a virada pro carro (1:58)
-    ("amb_ventilacao.mp3", 82.0, "aloop=loop=-1:size=2147483647,atrim=0:36,volume=0.3,afade=t=in:d=1.5,afade=t=out:st=35:d=1"),
+    ("amb_ventilacao.mp3", 81.0, "aloop=loop=-1:size=2147483647,atrim=0:37,volume=0.3,afade=t=in:d=1.5,afade=t=out:st=36:d=1"),
     ("v_ari1.mp3", 84.2, "volume=1.0"),
     # --- Cena 6: Larissa
     ("v_larissa1.mp3", 98.2, "volume=1.0"),
     ("v_ari2.mp3", 110.2, "volume=1.0"),
     # --- Cena 7: carro blindado
     ("amb_carro.mp3", 118.0, "aloop=loop=-1:size=2147483647,atrim=0:36,volume=0.4,afade=t=in:d=1,afade=t=out:st=35:d=1"),
-    ("v_ari3.mp3", 120.2, "volume=1.0"),
+    ("v_ari3.mp3", 121.2, "volume=1.0"),
     ("sfx_tap.mp3", 127.7, "volume=0.35"),
     ("v_larissa2.mp3", 128.2, "volume=1.0"),
     ("v_ari4.mp3", 132.2, "volume=1.0"),
-    ("v_ari5.mp3", 148.2, "volume=1.0"),
+    ("v_ari5.mp3", 149.2, "volume=1.0"),
     # --- Cena 8: chegada / cobertura — cliffhanger com corte seco em 2:54
     ("amb_chegada.mp3", 154.0, "volume=0.6"),
     ("mus_tensao.mp3", 154.0, "atrim=0:20,volume=0.5,afade=t=in:d=2"),
-    ("sfx_whisky.mp3", 160.0, "volume=0.6"),
+    ("sfx_whisky.mp3", 161.0, "volume=0.6"),
     ("dario_preview.mp3", 166.2, DARIO),
 ]
 
