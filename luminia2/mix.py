@@ -42,39 +42,36 @@ THOUGHTS = [("p01.wav", 228.30), ("p02.wav", 243.35), ("p03.wav", 254.30)]
 MUSIC = [
     ("mus_1.mp3", 0.0, "atrim=0:66,volume=0.30,afade=t=in:d=0.05,afade=t=out:st=63:d=3"),
     ("mus_2.mp3", 63.0, "atrim=0:80,volume=0.30,afade=t=in:d=3,afade=t=out:st=76:d=4"),
-    ("mus_3.mp3", 139.0, "atrim=0:88,volume=0.24,afade=t=in:d=2,afade=t=out:st=86.5:d=0.6"),
-    ("mus_4.mp3", 226.0, "atrim=0:39,volume=0.11,afade=t=in:d=0.4,afade=t=out:st=34:d=5"),
+    ("mus_3.wav", 139.0, "atrim=0:88,volume=0.24,afade=t=in:d=2,afade=t=out:st=86.5:d=0.6"),
+    ("mus_4.mp3", 226.0, "atrim=0:39,volume=0.17,afade=t=in:d=0.4,afade=t=out:st=34:d=5"),
 ]
 
 SFX = [
     # Ambientes: apartamento com gente (até o clique) e apartamento vazio (depois).
-    ("sfx_room.mp3", 0.0, f"{LOOP},atrim=0:226.3,volume=0.28,afade=t=out:st=225.9:d=0.4"),
-    ("sfx_hvac.mp3", 226.0, f"{LOOP},atrim=0:39,volume=0.45,afade=t=in:d=0.6,afade=t=out:st=35:d=4"),
+    ("sfx_room.wav", 0.0, f"{LOOP},atrim=0:226.3,volume=0.28,afade=t=out:st=225.9:d=0.4"),
+    ("sfx_hvac.wav", 226.0, f"{LOOP},atrim=0:39,volume=1.1,afade=t=in:d=0.6,afade=t=out:st=35:d=4"),
     # 00:00–01:03 chegada e fascínio
     ("sfx_ice.mp3", 1.0, "volume=0.45"),
-    ("sfx_steps.mp3", 3.0, "volume=0.20"),
-    ("sfx_lume.mp3", 12.0, "volume=0.35"),
-    ("sfx_hum.mp3", 12.8, f"{LOOP},atrim=0:39,volume=0.12,afade=t=in:d=1,afade=t=out:st=33:d=6"),
+    ("sfx_steps.wav", 3.0, "volume=0.20"),
+    ("sfx_lume.wav", 12.0, "volume=0.35"),
+    ("sfx_hum.wav", 12.8, f"{LOOP},atrim=0:39,volume=0.12,afade=t=in:d=1,afade=t=out:st=33:d=6"),
     ("sfx_ice.mp3", 24.0, "volume=0.30"),
-    ("sfx_wineglass.mp3", 62.4, "volume=0.35"),
+    ("sfx_ice.mp3", 62.4, "volume=0.35"),
     # 01:03–02:20 poder
-    ("sfx_sub.mp3", 109.3, "volume=0.35"),
+    ("sfx_sub.wav", 109.3, "volume=0.35"),
     ("sfx_clink.mp3", 136.5, "volume=0.9"),
-    # 02:20–03:46 jantar: textura de mesa some depois de "Eu jamais faria isso" (~202)
-    ("sfx_dinner.mp3", 140.0, f"{LOOP},atrim=0:63,volume=0.22,afade=t=in:d=1.5,afade=t=out:st=60:d=3"),
-    ("sfx_napkin.mp3", 153.6, "volume=0.35"),
-    ("sfx_napkin.mp3", 155.6, "volume=0.30"),
-    ("sfx_wineglass.mp3", 163.0, "volume=0.30"),
-    ("sfx_wineglass.mp3", 168.5, "volume=0.30"),
-    ("sfx_chair.mp3", 187.8, "volume=0.30"),
+    # 02:20–03:46 jantar. Pendentes por falta de créditos na ElevenLabs: textura de talheres,
+    # guardanapo, cadeira e porta (nós já criados no flow do Ep2).
+    ("sfx_ice.mp3", 168.5, "volume=0.30"),
     ("sfx_ice.mp3", 207.0, "volume=0.20"),
-    ("sfx_steps.mp3", 214.2, "volume=0.30"),
-    ("sfx_door.mp3", 221.5, "volume=0.40"),
+    ("sfx_steps.wav", 214.2, "volume=0.35"),
+    ("sfx_steps.wav", 215.8, "volume=0.30"),
+    ("sfx_steps.wav", 217.4, "volume=0.25"),
     # 03:46 CLIQUE, e a ausência
     ("sfx_click.mp3", 226.0, "volume=0.9"),
-    ("sfx_note.mp3", 244.2, "volume=0.30"),
-    ("sfx_sip.mp3", 254.8, "volume=0.45"),
-    ("sfx_finalsub.mp3", 264.0, "volume=0.45"),
+    ("sfx_note.wav", 244.2, "volume=0.30"),
+    ("sfx_ice.mp3", 254.8, "volume=0.45"),
+    ("sfx_finalsub.wav", 264.0, "volume=0.45"),
 ]
 
 
@@ -96,7 +93,7 @@ def build(out_wav):
         labels.append(f"[a{i}]")
     chains.append(
         "".join(labels) + f"amix=inputs={len(labels)}:normalize=0:duration=longest,"
-        f"alimiter=limit=0.9,atrim=0:{TOTAL},apad=whole_dur={TOTAL}[out]")
+        f"volume=2dB,alimiter=limit=0.9,atrim=0:{TOTAL},apad=whole_dur={TOTAL}[out]")
     args += ["-filter_complex", ";".join(chains), "-map", "[out]",
              "-ar", "48000", "-c:a", "pcm_s16le", out_wav]
     subprocess.run(args, check=True)
