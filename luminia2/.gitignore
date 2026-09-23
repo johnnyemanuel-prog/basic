@@ -2,3 +2,4 @@
 *.wav
 !raw/*.wav
 ff.env
+__pycache__/
