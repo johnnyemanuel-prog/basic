@@ -75,25 +75,54 @@ SFX = [
 ]
 
 
+VOICE_TARGET_DB = -15.0    # volume médio de cada fala depois de nivelada
+THOUGHT_TARGET_DB = -17.0  # pensamentos um pouco mais baixos, mas audíveis
+MUSIC_GAIN = "volume=-3dB"
+# Música abaixa ~8 dB quando há voz e volta suave nas pausas.
+DUCK = "sidechaincompress=threshold=0.015:ratio=8:attack=30:release=600:makeup=1"
+
+
+def mean_db(path):
+    out = subprocess.run([FF, "-hide_banner", "-i", path, "-af", "volumedetect", "-f", "null", "-"],
+                         capture_output=True, text=True).stderr
+    return float(out.split("mean_volume:")[1].split("dB")[0])
+
+
 def build(out_wav):
-    tracks = [(f, t, "volume=1.0") for f, t in VOICES] + \
-             [(f, t, THOUGHT) for f, t in THOUGHTS] + MUSIC + SFX
-    missing = sorted({f for f, _, _ in tracks if not os.path.exists(os.path.join(RAW, f))})
+    voices = [(f, t, "") for f, t in VOICES] + [(f, t, THOUGHT + ",") for f, t in THOUGHTS]
+    beds = MUSIC
+    fx = SFX
+    everything = voices + beds + fx
+    missing = sorted({f for f, _, _ in everything if not os.path.exists(os.path.join(RAW, f))})
     if missing:
         sys.exit(f"Arquivos faltando em raw/: {missing}")
     args = [FF, "-hide_banner", "-y"]
-    for f, _, _ in tracks:
+    for f, _, _ in everything:
         args += ["-i", os.path.join(RAW, f)]
-    chains, labels = [], []
-    for i, (_, start, extra) in enumerate(tracks):
+    chains, i = [], 0
+
+    def place(idx, start, extra):
         ms = int(round(start * 1000))
-        chains.append(
-            f"[{i}:a]aresample=48000,aformat=channel_layouts=stereo,{extra},"
-            f"adelay={ms}|{ms}[a{i}]")
-        labels.append(f"[a{i}]")
-    chains.append(
-        "".join(labels) + f"amix=inputs={len(labels)}:normalize=0:duration=longest,"
-        f"volume=2dB,alimiter=limit=0.9,atrim=0:{TOTAL},apad=whole_dur={TOTAL}[out]")
+        return f"[{idx}:a]aresample=48000,aformat=channel_layouts=stereo,{extra}adelay={ms}|{ms}[x{idx}]"
+
+    vl, bl, fl = [], [], []
+    for f, t, extra in voices:
+        target = THOUGHT_TARGET_DB if extra else VOICE_TARGET_DB
+        gain = target - mean_db(os.path.join(RAW, f))
+        chains.append(place(i, t, f"{extra}volume={gain:.1f}dB,"))
+        vl.append(f"[x{i}]"); i += 1
+    for f, t, extra in beds:
+        chains.append(place(i, t, f"{extra},{MUSIC_GAIN},"))
+        bl.append(f"[x{i}]"); i += 1
+    for f, t, extra in fx:
+        chains.append(place(i, t, f"{extra},"))
+        fl.append(f"[x{i}]"); i += 1
+    chains.append("".join(vl) + f"amix=inputs={len(vl)}:normalize=0:duration=longest,asplit=2[vox][key]")
+    chains.append("".join(bl) + f"amix=inputs={len(bl)}:normalize=0:duration=longest[mus]")
+    chains.append(f"[mus][key]{DUCK}[musd]")
+    chains.append("".join(fl) + f"amix=inputs={len(fl)}:normalize=0:duration=longest[sfx]")
+    chains.append("[vox][musd][sfx]amix=inputs=3:normalize=0:duration=longest,"
+                  f"volume=2dB,alimiter=limit=0.9,atrim=0:{TOTAL},apad=whole_dur={TOTAL}[out]")
     args += ["-filter_complex", ";".join(chains), "-map", "[out]",
              "-ar", "48000", "-c:a", "pcm_s16le", out_wav]
     subprocess.run(args, check=True)
