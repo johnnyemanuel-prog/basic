@@ -59,7 +59,7 @@ SFX = [
     ("sfx_ice.mp3", 62.4, "volume=0.35"),
     # 01:03–02:20 poder
     ("sfx_sub.wav", 109.3, "volume=0.35"),
-    ("sfx_clink.mp3", 136.5, "volume=0.9"),
+    ("sfx_clink.mp3", 138.0, "volume=0.9"),
     # 02:20–03:46 jantar. Pendentes por falta de créditos na ElevenLabs: textura de talheres,
     # guardanapo, cadeira e porta (nós já criados no flow do Ep2).
     ("sfx_ice.mp3", 168.5, "volume=0.30"),
