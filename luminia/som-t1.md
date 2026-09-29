@@ -172,6 +172,8 @@ Loops de 1 a 2 minutos. **São 16 ambientes para a temporada inteira**, e vário
 | F16 | Caneta-tinteiro + papel | Ari (E4) |
 | F17 | Prensa hidráulica + acidente | E3 |
 | F18 | Chapa e Cartucho sendo feito | E5 (rua do casamento) |
+| F19 | Elevador de luxo: sino suave + portas | E1, E4 (20º andar); T3 |
+| F20 | Vibração curta de celular | E1 (mensagem de "D."); reaproveitável |
 
 ### Transições
 | Código | Som | Regra |
