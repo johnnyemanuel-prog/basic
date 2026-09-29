@@ -58,7 +58,9 @@ Cada tema é produzido **uma vez**, em partes separadas (base, melodia, percuss�
 
 ## 3. Vozes (V)
 
-**Sem narrador onisciente** (recomendação). As frases de narração do livro que forem essenciais viram **legenda na tela**, que é a tradição do motion comic e não custa nada. O pensamento de um personagem entra na **voz dele** (V.O. próximo ao microfone), usado com moderação.
+**Decidido:** todas as vozes são geradas por IA. A voz do Lume é feminina. O **narrador (V17)** existe, mas só para as frases de narração do livro que não funcionam como legenda nem como fala, **no máximo 1 a 3 por episódio**. O pensamento de um personagem entra na **voz dele** (V.O. próximo ao microfone), usado com moderação.
+
+Os prompts de criação e as frases de teste de cada voz estão em [`vozes-t1.md`](vozes-t1.md).
 
 ### Principais
 | Código | Personagem | Idade (2034) | Nota de voz |
@@ -83,7 +85,8 @@ Cada tema é produzido **uma vez**, em partes separadas (base, melodia, percuss�
 | V14 | Criança (menino, 13 anos) | George pequeno (E5) |
 | V15 | Mulher, voz de apresentadora | Locutora da LumeTV (E5, E7, curtas) |
 | V16 | Inglês nativo | Julian: "Fred, mate! Pega uma!" (E7) |
-| **V00** | **Voz do Lume** | Voz do sistema, calma e simpática, com processamento leve (filtro e reverberação curta). É um personagem recorrente |
+| **V00** | **Voz do Lume** (feminina) | Voz do sistema, calma e simpática, com processamento leve (filtro e reverberação curta). É um personagem recorrente |
+| **V17** | Narrador | Mínimo: 1 a 3 frases por episódio |
 | W | Walla (vozes de multidão) | Festa, comício, sala de aula, Occupy, cozinha do casamento |
 
 ### Falas do Lume (V00): gerar uma vez e reutilizar
@@ -204,3 +207,31 @@ Loops de 1 a 2 minutos. **São 16 ambientes para a temporada inteira**, e vário
 3. **A01, A07, A10 e A11**: os ambientes que mais se repetem.
 4. **F02 e F03**: as assinaturas de Dario e Mira.
 5. O resto, na ordem em que os episódios forem feitos.
+
+---
+
+## 9. Onde buscar música e efeitos com uso liberado
+
+Canal no YouTube com monetização conta como **uso comercial**. Confira sempre a licença de cada faixa, porque dentro de um mesmo site as licenças variam. Guarde o nome, o link e a licença de tudo numa planilha.
+
+### Música gerada por IA (a sua escolha principal)
+- **Verifique o plano antes de gerar.** Em várias ferramentas (por exemplo Suno e Udio), o **plano gratuito não libera uso comercial**, e a música gerada ali não pode ir para um canal monetizado. Gere já no plano pago, porque a licença normalmente vale para o que foi gerado durante a assinatura.
+- Peça sempre **instrumental** e, quando a ferramenta permitir, **as partes separadas (stems)** para ajustar ao corte.
+
+### Bibliotecas de música
+| Biblioteca | Para quê | Licença |
+|---|---|---|
+| **YouTube Audio Library** (dentro do YouTube Studio) | Complemento geral e mais seguro contra reclamação de direitos no próprio YouTube | Grátis; algumas faixas pedem crédito na descrição |
+| **Musopen** | **M04 e M11**: gravações de clássicos (Strauss, Bach, Mendelssohn) | Muitas gravações em domínio público; confira cada uma |
+| **Pixabay Music** | Complemento, trilhas de tensão | Grátis e sem crédito obrigatório, mas algumas faixas geram reclamação automática de direitos no YouTube; teste antes de publicar |
+| **Incompetech (Kevin MacLeod)** | Emergências, clima genérico | CC BY: crédito obrigatório na descrição |
+
+### Bibliotecas de efeitos
+| Biblioteca | Para quê | Licença |
+|---|---|---|
+| **Freesound** | Ambientes e foley (chuva no zinco, passos, taças) | Por som: prefira **CC0**; CC BY exige crédito; **evite CC BY-NC** (não comercial) |
+| **Pixabay Sound Effects** | Efeitos rápidos | Grátis, sem crédito |
+| **Sonniss (pacotes GDC)** | Pacotes profissionais grandes: interface, drones, ambientes urbanos | Livre de royalties, uso comercial liberado |
+| **ElevenLabs Sound Effects** | Sons sob medida da família U (interface do Lume) e do gerador | Uso comercial nos planos pagos |
+
+**Evite:** BBC Sound Effects, porque a licença gratuita é só para uso não comercial.
