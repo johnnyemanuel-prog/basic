@@ -16,6 +16,8 @@ A ideia de "áudio primeiro" está certa, mas **quem define a duração é a fai
 6. **Animar só os momentos-chave** (lista na seção 7).
 7. **Mixagem final** para o YouTube: −14 LUFS integrado, pico máximo de −1 dBTP, e a voz sempre na frente.
 
+**Regra visual:** cerca de 90% do tempo é imagem parada com movimento de câmera (zoom, pan, tilt). Só cerca de 10% é animação de verdade. Cada imagem é segurada por vários planos, e o interesse vem do áudio.
+
 **Exceção:** as montagens sem fala (T1E8, com a véspera de todos os personagens, e a meia-noite do T1E10) são **cortadas no ritmo da música**. Nesses trechos a música vem primeiro.
 
 ---
