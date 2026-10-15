@@ -7,6 +7,23 @@
 
 ---
 
+## 0. Resultado principal (configuração recomendada)
+
+**Hipóteses da configuração recomendada:**
+- Eleição em 25/out: 10 dias após 15/out e 11 dias após a última pesquisa (H = 11).
+- **Peso intermediário da matriz pd:** λ = 0,5, ou seja, metade do tamanho efetivo das subamostras da pd.
+- **Viés de recordação baixo:** σ_r = 0,5 p.p., sem sinal imposto. A justificativa é que o 1º turno foi recente, o que reduz o erro de lembrança do voto.
+- Os demais parâmetros seguem o caso-base: Modelo 2, indecisos III, σ_house = 0,02 e σ_extra = 0,02.
+
+| Deriva da intenção até a eleição | E[θ_A] | IC 90 % | P(θ_A > 0,5) |
+|---|---:|---|---:|
+| σ_drift = 0,01 (base) | 48,4 % | 47,2 – 49,7 % | **1,9 %** |
+| σ_drift = 0,02 (alta) | 48,4 % | 46,8 – 50,0 % | **5,3 %** |
+
+**Faixa recomendada: P(θ_A > 0,5) ≈ 2 a 5 %, com E[θ_A] ≈ 48,4 %.** Essa probabilidade depende das hipóteses e não é uma previsão. A seção 12 mostra a sensibilidade completa a λ e σ_r: com λ = 1 e σ_r = 0 a faixa vai de 0,4 a 1,2 %; com λ = 0,25 e σ_r = 1 p.p., de 4,7 a 14,1 %. Usando só as pesquisas nacionais (λ = 0), a faixa é de 7 a 25 %.
+
+---
+
 ## 1. Conferência dos dados
 
 ### 1.1 Somas (valores exatos)
@@ -424,6 +441,39 @@ O total de novos comparecentes inclui a fração BN da linha ABS (16,7 % na base
 
 ---
 
+## 12. Peso da matriz pd, viés de recordação e eleição em 10 dias
+
+**Motivação.** A matriz pd fica centrada em θ_A ≈ 47,5 %, mas a topline pd e as demais pesquisas ficam em ≈ 48,5 % (inconsistência nº 5). Com horizonte longo, as pesquisas perdem precisão e a matriz passa a dominar o posterior. Por isso a confiança na matriz virou um parâmetro explícito, em vez de ficar implícita.
+
+**Implementação** (`modelo.py`, seção 15):
+- **Peso λ da matriz pd:** α_g = λ · n_eff,g · m_g + 0,5, o que equivale a um DEFF da pd de 2/λ. Os valores de df e qu continuam com DEFF = 2.
+  - λ = 1 é o modelo das seções anteriores.
+  - λ = 0 equivale a usar só as pesquisas nacionais.
+- **Viés de recordação:** θ_A,estr ← θ_A,estr + b, com b ~ N(0, σ_r²) e sem sinal imposto. Esse termo representa um deslocamento da matriz inteira por erro na lembrança ou na ponderação do voto do 1º turno. Como o 1º turno foi recente, a hipótese é de viés baixo (σ_r = 0,5 p.p.), e testei também 0 e 1 p.p.
+- **Pesquisas:** H = 11 dias, σ_house = 0,02, σ_extra = 0,02.
+
+Em cada célula: E[θ_A] / P(θ_A > 0,5). A linha em negrito é a configuração recomendada.
+
+| λ | σ_r | Estrutural (sem pesquisas) | Completo, σ_drift = 0,01 | Completo, σ_drift = 0,02 |
+|---|---|---|---|---|
+| 1 | 0 | 48,1 % / 1,5 % | 48,3 % / 0,4 % | 48,2 % / 1,2 % |
+| 1 | 0,5 p.p. | 48,1 % / 3,2 % | 48,3 % / 0,9 % | 48,3 % / 2,5 % |
+| 1 | 1,0 p.p. | 48,1 % / 7,7 % | 48,4 % / 2,1 % | 48,4 % / 6,1 % |
+| 0,5 | 0 | 48,3 % / 5,4 % | 48,4 % / 1,5 % | 48,4 % / 4,2 % |
+| **0,5** | **0,5 p.p.** | **48,3 % / 6,9 %** | **48,4 % / 1,9 %** | **48,4 % / 5,3 %** |
+| 0,5 | 1,0 p.p. | 48,3 % / 12,5 % | 48,4 % / 3,2 % | 48,5 % / 9,4 % |
+| 0,25 | 0 | 48,5 % / 14,5 % | 48,5 % / 3,9 % | 48,6 % / 10,7 % |
+| 0,25 | 0,5 p.p. | 48,5 % / 16,2 % | 48,5 % / 4,0 % | 48,6 % / 11,8 % |
+| 0,25 | 1,0 p.p. | 48,5 % / 19,5 % | 48,5 % / 4,7 % | 48,6 % / 14,1 % |
+| 0 (só pesquisas) | — | — | 48,5 % / 7,4 % | 48,8 % / 25,4 % |
+
+**Leitura:**
+- O centro quase não muda: E[θ_A] fica entre 48,2 % e 48,8 % em todas as configurações. O que muda é a **largura** da distribuição e, com ela, a cauda acima de 50 %.
+- Na configuração recomendada, o fator dominante é a **deriva da intenção nos 10 dias** (1,9 % contra 5,3 %). O peso da matriz e o viés de recordação vêm depois.
+- O ESS com λ < 1 fica entre 2,2 mil e 4,4 mil sorteios efetivos: adequado para probabilidades de alguns por cento.
+
+---
+
 ## 13. Limitações
 
 1. **n das subamostras desconhecido.** Todo n_eff é aproximação (Modelo 2), e o Modelo 1 é uma escolha ad hoc (σ_add = 5 p.p.). As tensões z ≈ −2 (C→B) e z ≈ +3 (BN+ABS→A) dependem dessa aproximação.
@@ -436,7 +486,8 @@ O total de novos comparecentes inclui a fração BN da linha ABS (16,7 % na base
 8. **Amostragem por importância.** No modelo completo, ESS ≈ 13,7 mil em 1 mi de sorteios: suficiente para médias e IC 90 %, mas probabilidades de cauda abaixo de 0,1 % têm erro relativo alto. As sub-rodadas de sensibilidade (200 mil sorteios) têm ESS entre cerca de 290 e 7 mil.
 9. **Decomposição da variância** feita de um fator por vez em torno da média (efeitos de primeira ordem). As interações são pequenas (soma das partes/total = 1,02).
 10. **Erro do 1º turno não foi aplicado ao 2º turno**, como pedido. Nenhum h_j recebeu sinal a priori.
-11. As probabilidades P(θ_A > 0,5) aqui são **funções das hipóteses**. Mudam materialmente com o Modelo 1, com viés comum de ±1 p.p., com horizonte longo ou com cenários extremos de retenção e comparecimento (grades acima). Não são previsões.
+11. **λ e σ_r são escolhas de julgamento.** O valor recomendado (λ = 0,5, σ_r = 0,5 p.p.) segue a premissa de que, com o 1º turno recente, o erro de recordação é baixo, mas a matriz pd não deve ter peso total, por causa da inconsistência nº 5. A seção 12 mostra a amplitude de resultados.
+12. As probabilidades P(θ_A > 0,5) aqui são **funções das hipóteses**. Mudam materialmente com o Modelo 1, com viés comum de ±1 p.p., com horizonte longo ou com cenários extremos de retenção e comparecimento (grades acima). Não são previsões.
 
 ---
 
@@ -444,5 +495,5 @@ O total de novos comparecentes inclui a fração BN da linha ABS (16,7 % na base
 
 ```bash
 cd analise_segundo_turno
-python3 modelo.py      # ~1–2 min, ~3 GB RAM; gera resultados.md e resultados.json
+python3 modelo.py      # ~2–3 min, ~3 GB RAM; gera resultados.md e resultados.json
 ```

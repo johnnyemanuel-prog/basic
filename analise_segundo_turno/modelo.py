@@ -1354,6 +1354,57 @@ for sdd in [0.01, 0.02]:
 table(["σ_drift", "H (dias)", "viés comum δ em θ_B", "E[θ_A]", "IC 90%",
        "P(θ_A>0,5)"], rows)
 
+# =====================================================================
+# 15. PESO INTERMEDIÁRIO DA MATRIZ pd + VIÉS DE RECORDAÇÃO + ELEIÇÃO EM 10 DIAS
+# =====================================================================
+H_ELEICAO = 11          # eleição em 25/out (10 dias após 15/out); última pesquisa 14/out
+LAMBDAS = [1.0, 0.5, 0.25]     # peso da matriz pd: multiplica o n efetivo (κ_g) das linhas pd
+SIG_RECALL = [0.0, 0.005, 0.01]  # dp do viés de recordação/ponderação do 1T, em θ_A (sem sinal)
+LAMBDA_REC, SIG_REC = 0.5, 0.005  # configuração recomendada (peso intermediário, viés baixo)
+out("## Peso intermediário da matriz pd, viés de recordação e eleição em 10 dias")
+out()
+out("Peso λ da matriz pd: α_g = λ·n_eff,g·m_g + 0,5 (equivale a DEFF_pd = 2/λ; "
+    "df e qu mantêm DEFF=2). Viés de recordação: θ_A,estr ← θ_A,estr + b, "
+    "b ~ N(0, σ_r²), sem sinal imposto (representa erro na lembrança/ponderação "
+    "do voto do 1T que desloca a matriz como um todo). Pesquisas: σ_house=0,02, "
+    "σ_extra=0,02, horizonte H=11 dias (eleição em 25/out). "
+    f"Configuração recomendada: λ={LAMBDA_REC}, σ_r={100 * SIG_REC:.1f} p.p.")
+out()
+rng_rec = np.random.default_rng(SEED + 1)
+rows = []
+RES["peso_pd"] = {}
+for lam in LAMBDAS:
+    Ql, lll = draw_Q_post(alphas("M2", 2.0 / lam), 2.0, True, True, M)
+    thl0 = theta_A(resolve(Ql, "III"), draw_turnout(M))
+    del Ql
+    for sr in SIG_RECALL:
+        thl = np.clip(thl0 + rng_rec.normal(0, sr, M), 1e-4, 1 - 1e-4) if sr > 0 else thl0
+        w0 = norm_w(lll)
+        q0 = wq(thl, w0, [0.05, 0.95])
+        r = [f"{lam:.2f}", f"{100 * sr:.1f}",
+             f"{pct(wmean(thl, w0))} [{pct(q0[0], 1)}; {pct(q0[1], 1)}] / {pct(float(np.sum(w0 * (thl > 0.5))), 1)}"]
+        for sdd in [0.01, 0.02]:
+            m = poll_model(sdd, 0.02, 0.02, H=H_ELEICAO)
+            w = norm_w(lll + ll_poll(thl, m["zT"], m["vT"]))
+            q = wq(thl, w, [0.05, 0.95])
+            pA = float(np.sum(w * (thl > 0.5)))
+            RES["peso_pd"][f"lam={lam}|sr={sr}|drift={sdd}"] = dict(
+                mean=wmean(thl, w), q05=q[0], q95=q[1], pA=pA, ess=ess(w))
+            r.append(f"{pct(wmean(thl, w))} [{pct(q[0])}; {pct(q[1])}] / **{pct(pA, 1)}** (ESS {ess(w):,.0f})".replace(",", "."))
+        rows.append(r)
+table(["λ (peso pd)", "σ_r (p.p.)", "estrutural: E[θ_A] [IC90] / P(θ_A>0,5)",
+       "completo, σ_drift=0,01: E [IC90] / P", "completo, σ_drift=0,02: E [IC90] / P"], rows)
+rows = []
+for sdd in [0.01, 0.02]:
+    m = poll_model(sdd, 0.02, 0.02, H=H_ELEICAO)
+    t = expit(m["zT"])
+    s = math.sqrt(m["vT"]) * t * (1 - t)
+    RES["peso_pd"][f"lam=0|drift={sdd}"] = dict(mean=float(1 - t), pA=Phi((0.5 - t) / s))
+    rows.append([f"{sdd:.2f}", pct(1 - t), f"{100 * s:.2f}", pct(Phi((0.5 - t) / s), 1)])
+out("Referência λ=0 (só pesquisas nacionais, H=11):")
+out()
+table(["σ_drift", "E[θ_A]", "dp (p.p.)", "P(θ_A>0,5)"], rows)
+
 with open("resultados.md", "w") as f:
     f.write("\n".join(OUT) + "\n")
 with open("resultados.json", "w") as f:
