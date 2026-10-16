@@ -1,0 +1,226 @@
+<title>Fronteira de Virada A × B</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single analytic column — header, controls row, chart, notes, table. */
+:root{
+  --bg:#fbfbfa; --surface:#ffffff; --fg:#141413; --fg2:#55544f; --muted:#86857f;
+  --grid:#e7e6e1; --axis:#b9b8b1; --win:#2a78d6; --win-fill:rgba(42,120,214,.07);
+  --s1:#2a78d6; --s2:#eb6834; --pt:#141413; --form:#6250d6; --ring:#ffffff;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#141413; --surface:#1a1a19; --fg:#f0efec; --fg2:#c3c2b7; --muted:#8f8e86;
+  --grid:#2c2c2a; --axis:#55544f; --win:#3987e5; --win-fill:rgba(57,135,229,.10);
+  --s1:#3987e5; --s2:#d95926; --pt:#f0efec; --form:#9085e9; --ring:#1a1a19; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#141413; --surface:#1a1a19; --fg:#f0efec; --fg2:#c3c2b7; --muted:#8f8e86;
+  --grid:#2c2c2a; --axis:#55544f; --win:#3987e5; --win-fill:rgba(57,135,229,.10);
+  --s1:#3987e5; --s2:#d95926; --pt:#f0efec; --form:#9085e9; --ring:#1a1a19; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding-block:28px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:grid;gap:20px}
+h1{font-size:1.6rem;font-weight:600;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lede{color:var(--fg2);margin:0;max-width:68ch}
+.eq{font-family:var(--mono);font-size:.82rem;color:var(--fg2);background:var(--surface);
+  border:1px solid var(--grid);border-radius:6px;padding:10px 12px;overflow-x:auto;white-space:pre}
+.controls{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:end}
+.ctl{display:grid;gap:4px;min-width:0}
+.ctl label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:500}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--axis);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-size:.85rem;background:transparent;color:var(--fg2);border:0;
+  border-right:1px solid var(--axis);padding:5px 10px;cursor:pointer;font-variant-numeric:tabular-nums}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--s2);color:#fff}
+.seg button:focus-visible,input:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+input[type=range]{width:min(260px,70vw);accent-color:var(--s2)}
+.val{font-family:var(--mono);font-size:.85rem;color:var(--fg);font-variant-numeric:tabular-nums}
+.chartbox{position:relative;background:var(--surface);border:1px solid var(--grid);border-radius:8px;padding:8px;overflow-x:auto}
+svg{display:block;width:100%;min-width:640px;height:auto;font-family:var(--sans)}
+.tick{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.axlab{fill:var(--fg2);font-size:12px;font-weight:500}
+.dl{font-size:12px;font-weight:500;fill:var(--fg)}
+.dl2{font-size:11px;fill:var(--fg2)}
+.tip{position:absolute;pointer-events:none;background:var(--surface);color:var(--fg);border:1px solid var(--axis);
+  border-radius:6px;padding:8px 10px;font-size:.8rem;line-height:1.4;box-shadow:0 4px 14px rgba(0,0,0,.12);
+  font-variant-numeric:tabular-nums;min-width:190px}
+.tip b{font-weight:600}
+.sw{display:inline-block;width:10px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.82rem;color:var(--fg2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.notes{display:grid;gap:8px;color:var(--fg2);font-size:.9rem;max-width:72ch}
+.notes p{margin:0}
+details{font-size:.88rem}
+summary{cursor:pointer;color:var(--fg2)}
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.85rem;min-width:420px}
+th,td{padding:5px 12px;text-align:right;border-bottom:1px solid var(--grid)}
+th{color:var(--muted);font-weight:500;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+td:first-child,th:first-child{text-align:left}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <h1>Fronteira de virada</h1>
+    <p class="lede">Cada ponto do plano é uma combinação de troca de votos entre os eleitores dos dois finalistas. Acima da linha, A chega a 50% + 1 dos votos válidos; abaixo, não. A elipse mostra onde o modelo espera que a troca real esteja. Mova o controle de faltantes para ver a fronteira descer quando mais abstencionistas do 1º turno vão votar.</p>
+  </header>
+
+  <div class="controls" role="group" aria-label="Cenário de comparecimento">
+    <div class="ctl">
+      <label for="surge">Faltantes adicionais votando</label>
+      <div style="display:flex;gap:10px;align-items:center">
+        <input id="surge" type="range" min="0" max="40" step="1" value="20">
+        <span class="val" id="surgeVal">20%</span>
+      </div>
+    </div>
+    <div class="ctl">
+      <label id="splitLab">Divisão A:B dos novos eleitores</label>
+      <div class="seg" id="split" aria-labelledby="splitLab">
+        <button type="button" data-s="0.5">50:50</button>
+        <button type="button" data-s="0.55">55:45</button>
+        <button type="button" data-s="0.6" aria-pressed="true">60:40</button>
+        <button type="button" data-s="0.6667">2:1</button>
+        <button type="button" data-s="0.75">75:25</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend" aria-hidden="true">
+    <span><i class="sw" style="background:var(--s1)"></i>Fronteira só com troca de votos</span>
+    <span><i class="sw" style="background:var(--s2)"></i>Fronteira com faltantes adicionais</span>
+    <span><i class="sw" style="background:var(--pt);height:8px;width:8px;border-radius:50%"></i>Hoje (média do modelo)</span>
+    <span><i class="sw" style="background:var(--form);height:8px;width:8px;border-radius:50%"></i>Virada mais provável</span>
+  </div>
+
+  <div class="chartbox" id="box">
+    <svg id="chart" viewBox="0 0 900 560" role="img" aria-labelledby="chartTitle chartDesc">
+      <title id="chartTitle">Fronteira de virada: saída de B para A necessária versus saída de A para B</title>
+      <desc id="chartDesc">Eixo horizontal: percentual dos eleitores de A no 1º turno que votam em B. Eixo vertical: percentual dos eleitores de B que votam em A. Linha azul: fronteira sem mudança no comparecimento, de 3,82% a 11,6%. Ponto atual em 5,13% e 5,22%, abaixo da fronteira. Ponto de virada mais provável em 3,34% e 7,03%.</desc>
+    </svg>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+
+  <div class="eq">X_BA necessário = 5,22% + [3,762 mi + 1 − 1,024 mi·(5,13 − X_AB) − 0,283 mi·x·(a − b)] / 1,066 mi
+(X em p.p.; x = % dos 33,47 mi de faltantes; a − b = desequilíbrio da divisão dos novos eleitores)</div>
+
+  <div class="notes">
+    <p><b>Leitura.</b> O ponto “hoje” (5,1% de A indo para B; 5,2% de B indo para A) está cerca de 2 desvios-padrão abaixo da fronteira azul. O caminho mais curto até ela, medido na incerteza do modelo, leva ao ponto roxo: 3,3% e 7,0%, sem comparecimento extra.</p>
+    <p>A linha laranja só se afasta da azul quando há muitos faltantes <i>e</i> uma divisão bem favorável a A. Com 50:50 as duas coincidem. É por isso que o comparecimento pesa pouco no modelo.</p>
+    <p>Base: configuração recomendada (peso 0,5 na matriz pd, viés de recordação de 0,5 p.p., eleição em 10 dias). Todo o resto fica fixo. São equações condicionais, não previsões.</p>
+  </div>
+
+  <details>
+    <summary>Ver os valores em tabela</summary>
+    <div class="tbl"><table id="tbl"><thead><tr><th>Saída A→B</th><th>B→A necessária (só troca)</th><th>B→A necessária (com faltantes)</th></tr></thead><tbody></tbody></table></div>
+  </details>
+</div>
+
+<script>
+(function(){
+  // Constantes do modelo (resultados.json → virada)
+  const GAP=3762034.82, NA=51213648.67, NB=53287738.84, XAB0=0.0513072, XBA0=0.0522244,
+        NABS=33470000, FBN=0.1534077, SDX=0.0125, SDY=0.0124, RHO=0.18,
+        FORM={x:0.0334, y:0.0703};
+  const need=(xab,x,s)=> XBA0 + (GAP+1 - 2*NA*(XAB0-xab) - NABS*x*(1-FBN)*(2*s-1)) / (2*NB);
+
+  const W=900,H=560,M={l:64,r:28,t:20,b:56};
+  const X0=0,X1=0.08,Y0=0,Y1=0.13;
+  const sx=v=>M.l+(v-X0)/(X1-X0)*(W-M.l-M.r);
+  const sy=v=>H-M.b-(v-Y0)/(Y1-Y0)*(H-M.t-M.b);
+  const inv=px=>X0+(px-M.l)/(W-M.l-M.r)*(X1-X0);
+  const svg=document.getElementById('chart'), NS='http://www.w3.org/2000/svg';
+  const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e};
+  const pct=(v,d=1)=>(100*v).toFixed(d).replace('.',',')+'%';
+
+  let surge=0.20, split=0.6;
+
+  function draw(){
+    while(svg.lastChild && svg.lastChild.tagName!=='desc') svg.removeChild(svg.lastChild);
+    // grade e eixos
+    for(let v=0;v<=X1+1e-9;v+=0.01){ el('line',{x1:sx(v),x2:sx(v),y1:sy(Y0),y2:sy(Y1),stroke:'var(--grid)','stroke-width':1});
+      el('text',{x:sx(v),y:H-M.b+18,'text-anchor':'middle',class:'tick'}).textContent=(v*100).toFixed(0)+'%'; }
+    for(let v=0;v<=Y1+1e-9;v+=0.02){ el('line',{x1:sx(X0),x2:sx(X1),y1:sy(v),y2:sy(v),stroke:'var(--grid)','stroke-width':1});
+      el('text',{x:M.l-8,y:sy(v)+4,'text-anchor':'end',class:'tick'}).textContent=(v*100).toFixed(0)+'%'; }
+    el('line',{x1:sx(X0),x2:sx(X1),y1:sy(0),y2:sy(0),stroke:'var(--axis)','stroke-width':1});
+    el('line',{x1:sx(0),x2:sx(0),y1:sy(Y0),y2:sy(Y1),stroke:'var(--axis)','stroke-width':1});
+    el('text',{x:(M.l+W-M.r)/2,y:H-12,'text-anchor':'middle',class:'axlab'}).textContent='Eleitores de A no 1º turno que votam em B (X_AB)';
+    el('text',{x:16,y:(M.t+H-M.b)/2,'text-anchor':'middle',class:'axlab',transform:`rotate(-90 16 ${(M.t+H-M.b)/2})`}).textContent='Eleitores de B que votam em A (X_BA)';
+
+    // região "A vence" acima da fronteira base
+    const N=80, xs=[...Array(N+1)].map((_,i)=>X0+(X1-X0)*i/N);
+    const clipY=y=>Math.max(Y0,Math.min(Y1,y));
+    let d=`M${sx(X0)},${sy(Y1)} `+xs.map(x=>`L${sx(x)},${sy(clipY(need(x,0,0.5)))}`).join(' ')+` L${sx(X1)},${sy(Y1)} Z`;
+    el('path',{d,fill:'var(--win-fill)'});
+    el('text',{x:sx(0.004),y:sy(0.122),class:'dl2'}).textContent='A chega a 50% + 1';
+    el('text',{x:sx(0.078),y:sy(0.012),class:'dl2','text-anchor':'end'}).textContent='B mantém a maioria';
+
+    // elipses 1 e 2 dp
+    const ell=k=>{const pts=[];for(let i=0;i<=72;i++){const t=2*Math.PI*i/72;
+        const u=Math.cos(t), v=RHO*Math.cos(t)+Math.sqrt(1-RHO*RHO)*Math.sin(t);
+        pts.push(`${sx(XAB0+k*SDX*u)},${sy(XBA0+k*SDY*v)}`);} return 'M'+pts.join('L')+'Z';};
+    el('path',{d:ell(2),fill:'none',stroke:'var(--fg2)','stroke-width':1,'stroke-dasharray':'3 4'});
+    el('path',{d:ell(1),fill:'none',stroke:'var(--fg2)','stroke-width':1.2});
+    el('text',{x:sx(XAB0+2*SDX)+6,y:sy(XBA0-1.2*SDY),class:'dl2'}).textContent='2 dp';
+    el('text',{x:sx(XAB0+SDX)+6,y:sy(XBA0-0.4*SDY),class:'dl2'}).textContent='1 dp';
+
+    // linhas de fronteira
+    const line=(x,s,c)=>el('path',{d:'M'+xs.map(v=>`${sx(v)},${sy(clipY(need(v,x,s)))}`).join('L'),fill:'none',stroke:c,'stroke-width':2.5,'stroke-linecap':'round'});
+    const showS = surge>0 && split>0.5;
+    if(showS) line(surge,split,'var(--s2)');
+    line(0,0.5,'var(--s1)');
+    el('text',{x:sx(0.072),y:sy(need(0.072,0,0.5))-10,'text-anchor':'end',class:'dl'}).textContent='só troca de votos';
+    if(showS){ const yy=need(0.072,surge,split);
+      el('text',{x:sx(0.072),y:sy(clipY(yy))+26,'text-anchor':'end',class:'dl'}).textContent=`+${Math.round(surge*100)}% faltantes, ${splitLabel()}`; }
+
+    // caminho mais provável
+    el('line',{x1:sx(XAB0),y1:sy(XBA0),x2:sx(FORM.x),y2:sy(FORM.y),stroke:'var(--form)','stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el('circle',{cx:sx(FORM.x),cy:sy(FORM.y),r:7,fill:'var(--form)',stroke:'var(--ring)','stroke-width':2});
+    el('text',{x:sx(FORM.x)-12,y:sy(FORM.y)-12,'text-anchor':'end',class:'dl'}).textContent='virada mais provável';
+    el('text',{x:sx(FORM.x)-12,y:sy(FORM.y)+4,'text-anchor':'end',class:'dl2'}).textContent='3,3% / 7,0%';
+    el('circle',{cx:sx(XAB0),cy:sy(XBA0),r:7,fill:'var(--pt)',stroke:'var(--ring)','stroke-width':2});
+    el('text',{x:sx(XAB0)+12,y:sy(XBA0)+4,class:'dl'}).textContent='hoje: 5,1% / 5,2%';
+
+    // camada de hover
+    const g=el('g',{});
+    const cross=el('line',{y1:sy(Y0),y2:sy(Y1),stroke:'var(--axis)','stroke-width':1,visibility:'hidden'},g);
+    const d1=el('circle',{r:5,fill:'var(--s1)',stroke:'var(--ring)','stroke-width':2,visibility:'hidden'},g);
+    const d2=el('circle',{r:5,fill:'var(--s2)',stroke:'var(--ring)','stroke-width':2,visibility:'hidden'},g);
+    const hit=el('rect',{x:M.l,y:M.t,width:W-M.l-M.r,height:H-M.t-M.b,fill:'transparent'});
+    const tip=document.getElementById('tip'), box=document.getElementById('box');
+    function move(ev){
+      const r=svg.getBoundingClientRect(); const px=(ev.clientX-r.left)/r.width*W;
+      const xv=Math.max(X0,Math.min(X1,inv(px))); const y1=need(xv,0,0.5), y2=need(xv,surge,split);
+      cross.setAttribute('x1',sx(xv));cross.setAttribute('x2',sx(xv));cross.setAttribute('visibility','visible');
+      d1.setAttribute('cx',sx(xv));d1.setAttribute('cy',sy(clipY(y1)));d1.setAttribute('visibility','visible');
+      if(showS){d2.setAttribute('cx',sx(xv));d2.setAttribute('cy',sy(clipY(y2)));d2.setAttribute('visibility','visible');}
+      tip.innerHTML=`<b>Se ${pct(xv)} dos eleitores de A forem para B</b><br>`+
+        `<i class="sw" style="background:var(--s1)"></i>B→A necessária: <b>${pct(y1,2)}</b><br>`+
+        (showS?`<i class="sw" style="background:var(--s2)"></i>com +${Math.round(surge*100)}% faltantes (${splitLabel()}): <b>${pct(Math.max(0,y2),2)}</b><br>`:'')+
+        `<span style="color:var(--muted)">hoje: ${pct(XBA0,2)}</span>`;
+      tip.hidden=false;
+      const br=box.getBoundingClientRect(); let lx=ev.clientX-br.left+14, ly=ev.clientY-br.top+14;
+      if(lx+tip.offsetWidth>br.width-4) lx=ev.clientX-br.left-tip.offsetWidth-14;
+      tip.style.left=lx+'px'; tip.style.top=ly+'px';
+    }
+    function leave(){tip.hidden=true;[cross,d1,d2].forEach(e=>e.setAttribute('visibility','hidden'));}
+    hit.addEventListener('pointermove',move); hit.addEventListener('pointerleave',leave);
+
+    // tabela
+    const tb=document.querySelector('#tbl tbody'); tb.innerHTML='';
+    for(let v=0;v<=0.0701;v+=0.005){ const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${pct(v)}</td><td>${pct(need(v,0,0.5),2)}</td><td>${showS?pct(Math.max(0,need(v,surge,split)),2):'—'}</td>`; tb.appendChild(tr);}
+  }
+  function splitLabel(){return {0.5:'50:50',0.55:'55:45',0.6:'60:40',0.6667:'2:1',0.75:'75:25'}[split];}
+
+  const sl=document.getElementById('surge'), sv=document.getElementById('surgeVal');
+  sl.addEventListener('input',()=>{surge=sl.value/100; sv.textContent=sl.value+'%'; draw();});
+  document.querySelectorAll('#split button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#split button').forEach(o=>o.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); split=parseFloat(b.dataset.s); draw();}));
+  draw();
+})();
+</script>

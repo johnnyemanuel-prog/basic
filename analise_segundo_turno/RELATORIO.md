@@ -497,6 +497,8 @@ O alvo é V_A = V_B + 1, isto é, 50 % + 1 dos válidos. Em todas as tabelas des
 
 Cada eleitor que troca de lado vale 2 votos de margem, porque sai de um candidato e entra no outro. Um novo eleitor vale só (a − b) voto de margem, já descontada a fração de branco e nulo.
 
+Gráfico interativo da fronteira: `fronteira_virada.html`.
+
 ### a) Saída B→A necessária para cada saída A→B
 
 | X_AB (A→B) | θ_A sem mudar X_BA | **X_BA necessário** | Eleitores B→A |
