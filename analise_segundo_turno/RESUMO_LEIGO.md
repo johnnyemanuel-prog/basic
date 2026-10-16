@@ -43,7 +43,7 @@ Uma dessas pesquisas, a do instituto pd, trazia números que não batiam entre s
 >
 > Em **2 a 5 de cada 100 simulações**, A termina com mais de 50 %.
 
-Ou seja, uma virada de A não é impossível, mas aparece pouco nas simulações. É mais ou menos a chance de tirar um número específico num dado de 20 lados... jogando poucas vezes.
+Ou seja, uma virada de A não é impossível, mas aparece pouco nas simulações. Para comparar: 5 em 100 é a chance de tirar um número específico num dado de 20 lados, numa jogada só. 2 em 100 é ainda menos que isso.
 
 ⚠️ **Isso não é uma previsão.** É o que sai quando juntamos estes dados com estas hipóteses. Se as hipóteses mudarem, o número muda.
 
