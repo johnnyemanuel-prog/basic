@@ -1,58 +1,115 @@
-# Resumo para leigos
+# Resumo para leigos (explicado como para alguém de 17 anos)
 
-Este texto resume, em linguagem simples, a análise estatística de um segundo turno hipotético entre os candidatos **A** e **B**. A versão técnica completa está em `RELATORIO.md`.
+A versão técnica completa está em `RELATORIO.md`. Aqui vai o mesmo conteúdo, só que sem fórmulas.
 
-## O que foi feito
+---
 
-Juntamos três tipos de informação:
+## 1. A situação
 
-1. **O resultado do 1º turno.** B teve cerca de 2,2 milhões de votos a mais que A (47,0 % contra 45,2 % dos votos dados a candidatos). Os outros candidatos somaram 9,3 milhões de votos. Houve ainda 6 milhões de brancos e nulos e 33,5 milhões de abstenções.
-2. **Pesquisas que perguntam "em quem você votou no 1º turno e em quem vai votar agora".** Elas mostram para onde vão os eleitores de cada candidato.
-3. **Oito pesquisas nacionais de 2º turno**, feitas por sete institutos entre 3 e 14 de outubro.
+Uma eleição teve dois turnos. No 2º turno sobraram dois candidatos, **A** e **B**.
 
-Com isso, simulamos a eleição **1 milhão de vezes**. Em cada simulação, variamos tudo o que não se sabe com certeza: quantos eleitores de cada lado mudam de voto, quem vai ou não votar, para onde vão os indecisos, o quanto as pesquisas podem errar e o quanto a opinião pode mudar até o dia da eleição.
+No 1º turno:
+- B teve **56,1 milhões** de votos e A teve **53,9 milhões**. B ficou cerca de 2,2 milhões à frente.
+- Outros candidatos (C, D, E…) somaram 9,3 milhões de votos. Eles saíram da disputa, e os eleitores deles agora precisam escolher entre A e B, votar branco/nulo ou não ir votar.
+- Cerca de **6 milhões** votaram branco ou nulo.
+- Cerca de **33,5 milhões não foram votar**. Vamos chamar esse grupo de **"faltantes"**.
 
-## O resultado, em uma frase
+A pergunta é: **com o que se sabe hoje, qual a chance de A terminar com mais da metade dos votos válidos?** Votos válidos são os votos dados a A ou a B, sem contar branco e nulo.
 
-**Considerando a eleição em 10 dias, A aparece com cerca de 48,4 % dos votos válidos e B com cerca de 51,6 %.** Na maioria das simulações, a diferença fica entre 0,6 e 5,6 pontos.
+## 2. Como a gente calculou
 
-Em quantas simulações A termina à frente?
+Pense num simulador de jogo de futebol que roda a partida **1 milhão de vezes**. Em cada rodada, ele muda um pouco as coisas que não sabemos com certeza: um jogador pode estar mais cansado, o juiz pode errar, chover ou não. No fim, você conta em quantas rodadas cada time ganhou.
 
-- **Cerca de 2 a 5 em cada 100** no cenário principal.
-- O número sobe para algo entre **7 e 25 em cada 100** se confiarmos só nas pesquisas nacionais e admitirmos que a opinião pode mudar bastante em 10 dias.
+Aqui fizemos o mesmo com a eleição. As "peças" que variam são:
 
-Isso **não é uma previsão**. É o que resulta das hipóteses do modelo. Se as hipóteses mudarem, o número muda.
+1. **Fidelidade:** quantos eleitores de A no 1º turno votam em A de novo, e o mesmo para B.
+2. **Troca de lado:** quantos eleitores de A passam para B, e quantos de B passam para A.
+3. **Eleitores dos eliminados:** para onde vão os votos de C, D, E…
+4. **Comparecimento:** quem vai votar e quem fica em casa.
+5. **Indecisos:** para onde eles vão.
+6. **Erro das pesquisas:** quanto elas podem estar erradas.
+7. **Tempo:** quanto a opinião das pessoas pode mudar nos **10 dias** que faltam até a eleição.
 
-## Por que a vantagem de B aparece em quase tudo
+Usamos três fontes de informação:
+- o resultado oficial do 1º turno;
+- pesquisas que perguntam *"em quem você votou antes e em quem vai votar agora"*;
+- **oito pesquisas nacionais** de 2º turno, de sete institutos diferentes.
 
-- **Os eleitores de B estão um pouco mais fiéis.** Cerca de 94,6 % devem repetir o voto em B, contra cerca de 92 % dos eleitores de A que devem repetir o voto em A. A diferença no lado de A vai principalmente para branco, nulo e indeciso, não para B.
-- **As trocas entre os lados se anulam.** Cerca de 5 % dos eleitores de cada candidato dizem que vão mudar para o outro.
-- **Os eleitores dos candidatos eliminados se dividem.** Entre eles, cerca de 46 % tendem a B e 27 % a A. Mas são poucos (cerca de 7 % do eleitorado), então isso pesa pouco.
-- **Todas as oito pesquisas nacionais mostram B entre 50,5 % e 52,8 % dos votos válidos.** Nenhuma delas destoa das demais além do que o acaso explicaria.
+Uma dessas pesquisas, a do instituto pd, trazia números que não batiam entre si. Por isso ela recebeu **meio peso**, como num trabalho em grupo em que a nota de um colega vale metade porque o trabalho dele tinha umas contas estranhas.
 
-## O que poderia mudar o quadro
+## 3. O resultado
 
-Para A chegar a 50 % dos válidos, mantendo tudo o mais igual, seria preciso, por exemplo, que:
+> **A aparece com cerca de 48,4 % dos votos válidos, e B com cerca de 51,6 %.**
+>
+> Em **2 a 5 de cada 100 simulações**, A termina com mais de 50 %.
 
-- cerca de 9 % dos eleitores de B no 1º turno passassem para A (hoje são cerca de 5 %); **ou**
-- 45 % dos votos que os eliminados dariam a B fossem para A; **ou**
-- cerca de 14 milhões de pessoas que não votaram no 1º turno fossem votar e escolhessem A na proporção de 2 para 1; **ou**
-- todas as pesquisas estivessem erradas na mesma direção, em cerca de 1,5 a 2 pontos.
+Ou seja, uma virada de A não é impossível, mas aparece pouco nas simulações. É mais ou menos a chance de tirar um número específico num dado de 20 lados... jogando poucas vezes.
 
-Dois fatores pesam **pouco**:
+⚠️ **Isso não é uma previsão.** É o que sai quando juntamos estes dados com estas hipóteses. Se as hipóteses mudarem, o número muda.
 
-- **Aumento do comparecimento em geral.** Mais gente votando só faz diferença se os novos eleitores preferirem muito um dos lados.
-- **A forma de distribuir os indecisos.** Eles são só cerca de 2 % dos eleitores, e os quatro métodos testados mudam o resultado em menos de meio ponto.
+## 4. Por que a conta pende para B
 
-O fator que pesa **muito** é **quem efetivamente vai votar de cada lado**. Se 1 ponto percentual a mais dos eleitores de A comparecer do que dos eleitores de B, o resultado muda cerca de 0,4 ponto.
+- **Fidelidade parecida, mas um pouco maior em B.** Cerca de 94,6 % dos eleitores de B repetem o voto, contra cerca de 92 % dos eleitores de A. A diferença no lado de A vai mais para branco/nulo/indeciso do que para B.
+- **A troca de lado está empatada.** Cerca de 5 % dos eleitores de cada lado dizem que vão mudar para o outro. Um anula o outro.
+- **Os eleitores dos eliminados pendem um pouco para B**, mas são poucos e pesam pouco no total.
+- **As oito pesquisas nacionais dizem praticamente a mesma coisa:** B entre 50,5 % e 52,8 % dos válidos.
 
-## Ressalvas importantes
+## 5. O que A precisaria para virar?
 
-- **Os dados têm inconsistências.**
-  - A tabela de "para onde vai cada eleitor" do instituto pd, aplicada aos votos reais do 1º turno, dá A com 47,1 %. Mas a pesquisa geral do mesmo instituto dá A com 48,9 %.
-  - Os institutos pd e qu discordam sobre os eleitores do candidato C e sobre quem não votou no 1º turno.
-  - O modelo não esconde essas diferenças: ele as combina e mostra o quanto cada uma influencia o resultado.
-- **Por isso, a tabela do instituto pd recebeu peso intermediário.** Ela vale como metade de uma pesquisa, e admitimos um pequeno erro de lembrança do voto no 1º turno. Como o 1º turno foi há pouco tempo, esse erro deve ser pequeno.
-- **Não sabemos o tamanho real** de cada subgrupo entrevistado nas pesquisas; usamos estimativas.
-- **Um erro de todas as pesquisas na mesma direção não pode ser medido** com estes dados. Só podemos testar o que aconteceria se ele existisse.
-- **As probabilidades dependem das hipóteses.** Elas servem para entender a estrutura dos números, não para apostar nem para afirmar quem vai ganhar.
+Para fechar a diferença, faltam cerca de **3,8 milhões de votos**. Testamos duas formas de conseguir isso.
+
+### Caminho 1: pessoas mudando de lado (a "virada de voto")
+
+Esta é a ferramenta mais poderosa. Quando alguém sai de B e vai para A, **B perde um voto e A ganha um**. A diferença cai **2 votos** de uma vez, como num jogo em que o gol de um time também tira um ponto do outro.
+
+| Se, de cada 100 eleitores de A, este número for para B… | …então, de cada 100 eleitores de B, este número precisa ir para A |
+|---|---|
+| 0 | cerca de 4 |
+| 2 | cerca de 6 |
+| **5 (como está hoje)** | **cerca de 9** |
+| 7 | cerca de 11 |
+
+**Regrinha:** para cada eleitor de A que passa para B, A precisa trazer de volta praticamente um eleitor de B a mais.
+
+### Caminho 2: os faltantes indo votar
+
+Aqui o efeito é bem mais fraco. Um faltante que vai votar **não tira voto de ninguém**: ele só soma de um lado. E isso só ajuda A se esse grupo **preferir A bem mais do que B**.
+
+Hoje as pesquisas indicam que os faltantes estão divididos mais ou menos ao meio (entre 45 % e 53 % para A).
+
+| Se os novos eleitores votarem A:B assim… | …quantos dos 33,5 milhões de faltantes precisariam ir votar além do esperado |
+|---|---|
+| 55 para A, 45 para B | **mais do que existem** (impossível) |
+| 60:40 | cerca de 2 em cada 3 (22 milhões) |
+| 2 para A, 1 para B | cerca de 4 em cada 10 (13 milhões) |
+| 75:25 | cerca de 1 em cada 4 (9 milhões) |
+| 100 % em A | cerca de 1 em cada 8 (4,4 milhões), **todos** votando em A |
+
+### Juntando os dois caminhos
+
+Dá para misturar: um pouco de gente mudando de lado e um pouco de faltante indo votar. Por exemplo, se 1 em cada 100 eleitores de cada lado trocasse a favor de A, ainda seria preciso que cerca de 30 % dos faltantes fossem votar com divisão 60:40.
+
+Quando o simulador procura **a combinação mais provável** de dar a virada, ele escolhe:
+
+> **Só a troca de votos:** cerca de **7 em cada 100** eleitores de B indo para A, e só cerca de **3 em cada 100** eleitores de A indo para B.
+
+Ele deixa o comparecimento de fora. O motivo: para os faltantes ajudarem, duas coisas precisam acontecer **ao mesmo tempo**. Muito mais gente precisa ir votar **e** essa gente precisa preferir A com folga. Duas surpresas juntas são bem menos prováveis que uma só.
+
+Nas simulações em que A vence:
+- cerca de **3/4 da virada** vêm da **troca de votos**;
+- cerca de **1/4** vem de as pesquisas terem medido um pouco errado como as pessoas votaram no 1º turno;
+- o **comparecimento** contribui de **quase nada** até cerca de 1/5, dependendo de quanto se deixa ele variar.
+
+## 6. Cuidados (as "letras miúdas")
+
+- **Os dados têm contradições.** A pesquisa pd, aplicada ao resultado real, dá A com 47 %, mas a mesma pesquisa diz 49 %. E dois institutos (pd e qu) discordam sobre alguns grupos de eleitores. Mostramos isso em vez de esconder.
+- **Não sabemos quantas pessoas de cada grupo foram entrevistadas.** Por isso usamos estimativas.
+- **Sobre os faltantes quase não há dados.** O quanto eles podem mudar o jogo é uma suposição nossa.
+- **Se todas as pesquisas errarem para o mesmo lado**, o modelo não tem como perceber. Só dá para testar "e se…?".
+- **Tudo isso é matemática sobre hipóteses.** Serve para entender **quais peças movem o resultado**, não para apostar nem para dizer quem vai ganhar.
+
+## 7. Resumindo em três frases
+
+1. Pelos dados, A está cerca de 3 pontos atrás nos votos válidos, e a chance de virar fica em torno de **2 a 5 %** neste modelo.
+2. O que mais poderia mudar isso é **gente trocando de lado**, porque cada troca vale dois votos.
+3. **Levar mais gente para votar** quase não muda a conta, a menos que essas pessoas prefiram A com muita folga, coisa que as pesquisas hoje não mostram.

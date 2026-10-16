@@ -1405,6 +1405,167 @@ out("Referência λ=0 (só pesquisas nacionais, H=11):")
 out()
 table(["σ_drift", "E[θ_A]", "dp (p.p.)", "P(θ_A>0,5)"], rows)
 
+# =====================================================================
+# 16. VIRADA: TROCA DE VOTOS (CROSSOVER) × COMPARECIMENTO DOS FALTANTES
+# =====================================================================
+out("## Virada: troca de votos × comparecimento dos faltantes (configuração recomendada)")
+out()
+rng_v = np.random.default_rng(SEED + 2)
+Qv, llv = draw_Q_post(alphas("M2", 2.0 / LAMBDA_REC), 2.0, True, True, M)
+Tv = draw_turnout(M)
+Pv = resolve(Qv, "III")
+del Qv
+Vv = votes(Pv, Tv)
+Sv = Vv[:, 0] + Vv[:, 1]
+bv = rng_v.normal(0, SIG_REC, M)
+thv = np.clip(Vv[:, 1] / Sv + bv, 1e-4, 1 - 1e-4)
+mv = poll_model(0.01, 0.02, 0.02, H=H_ELEICAO)
+wv = norm_w(llv + ll_poll(thv, mv["zT"], mv["vT"]))
+P0 = np.einsum("n,ngk->gk", wv, Pv)
+tau0 = np.einsum("n,ng->g", wv, Tv)
+t0, V0 = th_point(P0, tau0)
+NAt, NBt = N[iA] * tau0[iA], N[iB] * tau0[iB]
+xab0, xba0 = P0[iA, 0], P0[iB, 1]
+fbn = P0[iABS, 2]
+gap = V0[0] - V0[1]
+RES["virada"] = dict(thetaA=t0, gap=gap, XAB=xab0, XBA=xba0, NA=NAt, NB=NBt, fBN=fbn)
+out(f"Base: médias posteriores (λ={LAMBDA_REC}, σ_r={100 * SIG_REC:.1f} p.p., H={H_ELEICAO}, "
+    f"σ_drift=0,01). θ_A = {pct(t0)}; V_B − V_A = {gap:,.0f}; X_AB = {pct(xab0)}; "
+    f"X_BA = {pct(xba0)}; eleitores A comparecentes = {NAt:,.0f}; B = {NBt:,.0f}; "
+    f"fração BN dos faltantes = {pct(fbn, 1)}.".replace(",", "."))
+out()
+out("Alvo: V_A = V_B + 1 (50% + 1 dos válidos). Todo o resto fixo. "
+    "Equações condicionais, NÃO previsões.")
+out()
+
+# 16a: X_BA necessário para cada X_AB
+out("### 16a. Saída B→A necessária para cada saída A→B (0% a 7%)")
+out()
+rows = []
+for xab in np.arange(0, 0.07001, 0.005):
+    VA = V0[1] + NAt * (xab0 - xab)
+    VB = V0[0] - NAt * (xab0 - xab)
+    d = (VB - VA + 1) / (2 * NBt)
+    xba = xba0 + d
+    rows.append([pct(xab, 1), f"{NAt * xab / 1e6:.2f} mi", pct(VA / (VA + VB)),
+                 f"**{pct(xba)}**", f"{100 * d:+.2f}", f"{NBt * xba / 1e6:.2f} mi"])
+table(["X_AB (A→B)", "eleitores A→B", "θ_A sem mudar X_BA", "X_BA necessário",
+       "Δ vs atual (p.p.)", "eleitores B→A"], rows)
+out(f"Regra: X_BA ≈ {pct(xba0 + (gap + 1 - 2 * NAt * xab0) / (2 * NBt))} + "
+    f"{NAt / NBt:.3f} × X_AB.")
+out()
+
+# 16b: faltantes necessários por divisão
+out("### 16b. Faltantes do 1º turno (adicionais) necessários por divisão A:B")
+out()
+out(f"Faltantes = abstenção do 1T ({N[iABS]:,.0f}). O modelo já supõe "
+    f"τ_ABS ≈ {pct(tau0[iABS], 1)} comparecendo com a linha ABS (≈ "
+    f"{pct(P0[iABS, 1] / (P0[iABS, 0] + P0[iABS, 1]), 1)} A entre válidos); "
+    "a tabela dá os ADICIONAIS.".replace(",", "."))
+out()
+rows = []
+for lab, a in [("55:45", .55), ("60:40", .60), ("65:35", .65), ("2:1", 2 / 3), ("70:30", .70),
+               ("75:25", .75), ("80:20", .80), ("85:15", .85), ("90:10", .90), ("95:5", .95),
+               ("100:0", 1.0)]:
+    d = 2 * a - 1
+    n0 = (gap + 1) / d
+    n1 = n0 / (1 - fbn)
+    f = lambda n: f"{pct(n / N[iABS], 1)}" + (" ❌" if n > N[iABS] else "")
+    rows.append([lab, f(n0), f"{n0 / 1e6:.1f} mi", f(n1), f"{n1 / 1e6:.1f} mi",
+                 pct(T1 + n1 / ELEIT, 1)])
+table(["A:B dos novos", "% faltantes (todos válidos)", "pessoas",
+       f"% faltantes (BN {pct(fbn, 0)})", "pessoas", "comparecimento total resultante"], rows)
+
+# 16c: combinações
+out("### 16c. Combinações troca de votos × faltantes adicionais (com BN)")
+out()
+k_ba, k_ab = 2 * NBt / 100, 2 * NAt / 100       # votos de margem por p.p.
+out(f"Equação: {k_ba / 1e6:.3f}·ΔX_BA + {k_ab / 1e6:.3f}·(−ΔX_AB) + "
+    f"{N[iABS] * (1 - fbn) / 100 / 1e6:.3f}·x·(a−b) ≥ {gap / 1e6:.3f} (mi; ΔX em p.p., "
+    "x em % dos faltantes).")
+out()
+rows = []
+for dl in [0, 0.5, 1.0, 1.5]:
+    rem = gap + 1 - dl * (k_ba + k_ab)
+    r = [f"±{dl:.1f} p.p. ({pct(xba0 + dl / 100, 1)} / {pct(xab0 - dl / 100, 1)})"]
+    for a in [.55, .60, 2 / 3, .75]:
+        x = rem / (N[iABS] * (1 - fbn) * (2 * a - 1))
+        r.append(pct(max(x, 0), 0) + (" ❌" if x > 1 else ""))
+    rows.append(r)
+dl0 = (gap + 1) / (k_ba + k_ab)
+rows.append([f"±{dl0:.2f} p.p. ({pct(xba0 + dl0 / 100, 1)} / {pct(xab0 - dl0 / 100, 1)})",
+             "0%", "0%", "0%", "0%"])
+table(["Troca de votos (B→A / A→B)", "55:45", "60:40", "2:1", "75:25"], rows)
+
+# 16d: probabilidade combinada e caminho mais provável
+out("### 16d. Probabilidade combinada e caminho mais provável da virada")
+out()
+out("Choque de comparecimento dos faltantes e: N(0, σ_e² · eleitorado), sem sinal; "
+    "fração A entre válidos dos novos s ~ N(0,5; σ_s²) (centro entre pd ≈45 e qu ≈53). "
+    "PRIORS ASSUMIDOS — não há dados sobre eles. O choque é aplicado após a "
+    "ponderação pelas pesquisas (erro de modelo de comparecimento que as pesquisas não veem).")
+out()
+VA0 = Vv[:, 1] + bv * Sv
+VB0 = Vv[:, 0] - bv * Sv
+XBAv, XABv = Pv[:, iB, 1], Pv[:, iA, 0]
+fbv = Pv[:, iABS, 2]
+mu_ = lambda x, ww: wmean(x, ww)
+rows = []
+RES["virada"]["combinada"] = {}
+for se, ss in [(0.0, 0.05), (0.01, 0.05), (0.02, 0.05), (0.02, 0.08), (0.03, 0.08)]:
+    e = rng_v.normal(0, se, M) * ELEIT
+    sA = np.clip(rng_v.normal(0.5, ss, M), 0, 1)
+    va = VA0 + e * (1 - fbv) * sA
+    vb = VB0 + e * (1 - fbv) * (1 - sA)
+    win = va > vb + 1
+    pw = float(np.sum(wv * win))
+    wc = wv * win / pw
+    d_cross = 2 * ((XBAv - mu_(XBAv, wv)) * N[iB] * Tv[:, iB]
+                   + (mu_(XABv, wv) - XABv) * N[iA] * Tv[:, iA])
+    d_surge = e * (1 - fbv) * (2 * sA - 1)
+    d_rec = 2 * bv * Sv
+    c1, c2, c3 = mu_(d_cross, wc), mu_(d_surge, wc), mu_(d_rec, wc)
+    tot = c1 + c2 + c3
+    RES["virada"]["combinada"][f"se={se}|ss={ss}"] = dict(pA=pw, cross=c1, surge=c2, recall=c3)
+    rows.append([f"{100 * se:.0f} p.p.", f"{100 * ss:.0f} p.p.", f"**{pct(pw, 1)}**",
+                 pct(mu_(XBAv, wc), 1), pct(mu_(XABv, wc), 1),
+                 f"{c1 / 1e6:.2f} mi ({pct(c1 / tot, 0)})", f"{c2 / 1e6:.2f} mi ({pct(c2 / tot, 0)})",
+                 f"{c3 / 1e6:.2f} mi ({pct(c3 / tot, 0)})", f"{ess(wv * win):,.0f}".replace(",", ".")])
+table(["σ_e (comparec.)", "σ_s (divisão)", "P(θ_A>0,5)", "X_BA (dado vitória A)",
+       "X_AB (dado vitória A)", "contrib. troca", "contrib. comparec.", "contrib. viés recordação",
+       "ESS (vitórias)"], rows)
+out("Contribuições = média, nas simulações em que A vence, do quanto cada alavanca "
+    "reduziu a diferença em relação ao esperado (em votos de margem).")
+out()
+# FORM: ponto mais provável sobre a fronteira
+sxba = math.sqrt(mu_((XBAv - mu_(XBAv, wv)) ** 2, wv))
+sxab = math.sqrt(mu_((XABv - mu_(XABv, wv)) ** 2, wv))
+rows = []
+for se, ss in [(0.02, 0.05), (0.03, 0.08)]:
+    best = None
+    for xs in np.linspace(0, 0.30, 301):
+        for sa in np.linspace(0.5, 1, 251):
+            surge = xs * N[iABS]
+            rem = gap + 1 - surge * (1 - fbn) * (2 * sa - 1)
+            a1, a2 = 2 * NBt, 2 * NAt
+            den = (a1 * sxba) ** 2 + (a2 * sxab) ** 2
+            dba, dab, dc = (0, 0, 0) if rem <= 0 else (rem * a1 * sxba ** 2 / den,
+                                                       rem * a2 * sxab ** 2 / den, rem ** 2 / den)
+            d2 = (surge / (se * ELEIT)) ** 2 + ((sa - 0.5) / ss) ** 2 + dc
+            if best is None or d2 < best[0]:
+                best = (d2, xs, sa, dba, dab)
+    d2, xs, sa, dba, dab = best
+    rows.append([f"{100 * se:.0f} / {100 * ss:.0f} p.p.", f"{math.sqrt(d2):.2f} dp",
+                 pct(xs, 1), pct(sa, 1), f"{pct(xba0 + dba)} (+{100 * dba:.2f})",
+                 f"{pct(xab0 - dab)} (−{100 * dab:.2f})"])
+table(["σ_e / σ_s", "distância", "faltantes adicionais", "A entre novos",
+       "X_BA", "X_AB"], rows)
+out(f"Ponto mais provável sobre a fronteira de virada (menor distância em dp; "
+    f"dp(X_BA)={100 * sxba:.2f} p.p., dp(X_AB)={100 * sxab:.2f} p.p.). O comparecimento só "
+    "age via produto (quantidade × desequilíbrio da divisão), efeito de 2ª ordem: o "
+    "ponto ótimo não o utiliza.")
+out()
+
 with open("resultados.md", "w") as f:
     f.write("\n".join(OUT) + "\n")
 with open("resultados.json", "w") as f:

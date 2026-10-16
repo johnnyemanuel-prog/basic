@@ -733,3 +733,82 @@ Referência λ=0 (só pesquisas nacionais, H=11):
 | 0.01 | 48.52% | 1.03 | 7.4% |
 | 0.02 | 48.78% | 1.85 | 25.4% |
 
+## Virada: troca de votos × comparecimento dos faltantes (configuração recomendada)
+
+Base: médias posteriores (λ=0.5. σ_r=0.5 p.p.. H=11. σ_drift=0.01). θ_A = 48.42%; V_B − V_A = 3.762.035; X_AB = 5.13%; X_BA = 5.22%; eleitores A comparecentes = 51.213.649; B = 53.287.739; fração BN dos faltantes = 15.3%.
+
+Alvo: V_A = V_B + 1 (50% + 1 dos válidos). Todo o resto fixo. Equações condicionais, NÃO previsões.
+
+### 16a. Saída B→A necessária para cada saída A→B (0% a 7%)
+
+| X_AB (A→B) | eleitores A→B | θ_A sem mudar X_BA | X_BA necessário | Δ vs atual (p.p.) | eleitores B→A |
+|---|---|---|---|---|---|
+| 0.0% | 0.00 mi | 50.63% | **3.82%** | -1.40 | 2.04 mi |
+| 0.5% | 0.26 mi | 50.41% | **4.30%** | -0.92 | 2.29 mi |
+| 1.0% | 0.51 mi | 50.20% | **4.78%** | -0.44 | 2.55 mi |
+| 1.5% | 0.77 mi | 49.98% | **5.26%** | +0.04 | 2.80 mi |
+| 2.0% | 1.02 mi | 49.77% | **5.74%** | +0.52 | 3.06 mi |
+| 2.5% | 1.28 mi | 49.55% | **6.22%** | +1.00 | 3.32 mi |
+| 3.0% | 1.54 mi | 49.34% | **6.70%** | +1.48 | 3.57 mi |
+| 3.5% | 1.79 mi | 49.12% | **7.19%** | +1.96 | 3.83 mi |
+| 4.0% | 2.05 mi | 48.91% | **7.67%** | +2.44 | 4.08 mi |
+| 4.5% | 2.30 mi | 48.69% | **8.15%** | +2.92 | 4.34 mi |
+| 5.0% | 2.56 mi | 48.48% | **8.63%** | +3.40 | 4.60 mi |
+| 5.5% | 2.82 mi | 48.26% | **9.11%** | +3.88 | 4.85 mi |
+| 6.0% | 3.07 mi | 48.05% | **9.59%** | +4.37 | 5.11 mi |
+| 6.5% | 3.33 mi | 47.83% | **10.07%** | +4.85 | 5.37 mi |
+| 7.0% | 3.58 mi | 47.62% | **10.55%** | +5.33 | 5.62 mi |
+
+Regra: X_BA ≈ 3.82% + 0.961 × X_AB.
+
+### 16b. Faltantes do 1º turno (adicionais) necessários por divisão A:B
+
+Faltantes = abstenção do 1T (33.470.000). O modelo já supõe τ_ABS ≈ 18.8% comparecendo com a linha ABS (≈ 50.0% A entre válidos); a tabela dá os ADICIONAIS.
+
+| A:B dos novos | % faltantes (todos válidos) | pessoas | % faltantes (BN 15%) | pessoas | comparecimento total resultante |
+|---|---|---|---|---|---|
+| 55:45 | 112.4% ❌ | 37.6 mi | 132.8% ❌ | 44.4 mi | 106.9% |
+| 60:40 | 56.2% | 18.8 mi | 66.4% | 22.2 mi | 92.9% |
+| 65:35 | 37.5% | 12.5 mi | 44.3% | 14.8 mi | 88.2% |
+| 2:1 | 33.7% | 11.3 mi | 39.8% | 13.3 mi | 87.3% |
+| 70:30 | 28.1% | 9.4 mi | 33.2% | 11.1 mi | 85.9% |
+| 75:25 | 22.5% | 7.5 mi | 26.6% | 8.9 mi | 84.5% |
+| 80:20 | 18.7% | 6.3 mi | 22.1% | 7.4 mi | 83.6% |
+| 85:15 | 16.1% | 5.4 mi | 19.0% | 6.3 mi | 82.9% |
+| 90:10 | 14.1% | 4.7 mi | 16.6% | 5.6 mi | 82.4% |
+| 95:5 | 12.5% | 4.2 mi | 14.8% | 4.9 mi | 82.0% |
+| 100:0 | 11.2% | 3.8 mi | 13.3% | 4.4 mi | 81.7% |
+
+### 16c. Combinações troca de votos × faltantes adicionais (com BN)
+
+Equação: 1.066·ΔX_BA + 1.024·(−ΔX_AB) + 0.283·x·(a−b) ≥ 3.762 (mi; ΔX em p.p., x em % dos faltantes).
+
+| Troca de votos (B→A / A→B) | 55:45 | 60:40 | 2:1 | 75:25 |
+|---|---|---|---|---|
+| ±0.0 p.p. (5.2% / 5.1%) | 133% ❌ | 66% | 40% | 27% |
+| ±0.5 p.p. (5.7% / 4.6%) | 96% | 48% | 29% | 19% |
+| ±1.0 p.p. (6.2% / 4.1%) | 59% | 30% | 18% | 12% |
+| ±1.5 p.p. (6.7% / 3.6%) | 22% | 11% | 7% | 4% |
+| ±1.80 p.p. (7.0% / 3.3%) | 0% | 0% | 0% | 0% |
+
+### 16d. Probabilidade combinada e caminho mais provável da virada
+
+Choque de comparecimento dos faltantes e: N(0, σ_e² · eleitorado), sem sinal; fração A entre válidos dos novos s ~ N(0,5; σ_s²) (centro entre pd ≈45 e qu ≈53). PRIORS ASSUMIDOS — não há dados sobre eles. O choque é aplicado após a ponderação pelas pesquisas (erro de modelo de comparecimento que as pesquisas não veem).
+
+| σ_e (comparec.) | σ_s (divisão) | P(θ_A>0,5) | X_BA (dado vitória A) | X_AB (dado vitória A) | contrib. troca | contrib. comparec. | contrib. viés recordação | ESS (vitórias) |
+|---|---|---|---|---|---|---|---|---|
+| 0 p.p. | 5 p.p. | **2.3%** | 6.5% | 4.1% | 2.48 mi (76%) | 0.00 mi (0%) | 0.78 mi (24%) | 181 |
+| 1 p.p. | 5 p.p. | **2.3%** | 6.5% | 4.1% | 2.46 mi (75%) | 0.02 mi (1%) | 0.79 mi (24%) | 191 |
+| 2 p.p. | 5 p.p. | **2.4%** | 6.5% | 4.1% | 2.44 mi (74%) | 0.10 mi (3%) | 0.78 mi (23%) | 191 |
+| 2 p.p. | 8 p.p. | **2.5%** | 6.5% | 4.1% | 2.39 mi (70%) | 0.24 mi (7%) | 0.78 mi (23%) | 217 |
+| 3 p.p. | 8 p.p. | **3.0%** | 6.4% | 4.3% | 2.12 mi (62%) | 0.60 mi (18%) | 0.70 mi (20%) | 258 |
+
+Contribuições = média, nas simulações em que A vence, do quanto cada alavanca reduziu a diferença em relação ao esperado (em votos de margem).
+
+| σ_e / σ_s | distância | faltantes adicionais | A entre novos | X_BA | X_AB |
+|---|---|---|---|---|---|
+| 2 / 5 p.p. | 2.04 dp | 0.0% | 50.0% | 7.03% (+1.81) | 3.34% (−1.79) |
+| 3 / 8 p.p. | 2.04 dp | 0.0% | 50.0% | 7.03% (+1.81) | 3.34% (−1.79) |
+
+Ponto mais provável sobre a fronteira de virada (menor distância em dp; dp(X_BA)=1.24 p.p., dp(X_AB)=1.25 p.p.). O comparecimento só age via produto (quantidade × desequilíbrio da divisão), efeito de 2ª ordem: o ponto ótimo não o utiliza.
+

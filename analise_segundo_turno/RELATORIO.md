@@ -22,6 +22,11 @@
 
 **Faixa recomendada: P(θ_A > 0,5) ≈ 2 a 5 %, com E[θ_A] ≈ 48,4 %.** Essa probabilidade depende das hipóteses e não é uma previsão. A seção 12 mostra a sensibilidade completa a λ e σ_r: com λ = 1 e σ_r = 0 a faixa vai de 0,4 a 1,2 %; com λ = 0,25 e σ_r = 1 p.p., de 4,7 a 14,1 %. Usando só as pesquisas nacionais (λ = 0), a faixa é de 7 a 25 %.
 
+**Caminho mais provável para A chegar a 50 %:** a seção 12b detalha as combinações. Em resumo:
+- O caminho mais provável é a troca direta de votos entre os eleitores dos dois finalistas: saída B→A de ≈ 7,0 % e saída A→B de ≈ 3,3 %, uma melhora de ≈ 1,8 p.p. em cada sentido, ou ≈ 2 dp.
+- O aumento de comparecimento dos faltantes do 1º turno contribui pouco.
+- Com choques de comparecimento plausíveis, P(θ_A > 0,5) ≈ 2,3 a 3,0 %.
+
 ---
 
 ## 1. Conferência dos dados
@@ -474,6 +479,107 @@ Em cada célula: E[θ_A] / P(θ_A > 0,5). A linha em negrito é a configuração
 
 ---
 
+## 12b. Virada: troca de votos × comparecimento dos faltantes
+
+**Base:** configuração recomendada (λ = 0,5, σ_r = 0,5 p.p., H = 11, σ_drift = 0,01), avaliada nas médias posteriores. Nessa base:
+- θ_A = 48,42 %, e a diferença V_B − V_A é de **3,76 mi** de votos.
+- X_AB = 5,13 % e X_BA = 5,22 %.
+- Comparecem 51,2 mi de eleitores da coorte A e 53,3 mi da coorte B.
+- Entre os faltantes do 1º turno que votam, 15,3 % votam branco ou nulo.
+
+O alvo é V_A = V_B + 1, isto é, 50 % + 1 dos válidos. Em todas as tabelas desta seção, o resto fica fixo; são **equações condicionais, não previsões**. Os cálculos estão em `modelo.py`, seção 16.
+
+**Equação da virada** (milhões de votos de margem; ΔX em p.p.; x em % dos 33,47 mi de faltantes; a:b = divisão dos novos eleitores):
+
+```
+1,066·ΔX_BA + 1,024·(−ΔX_AB) + 0,283·x·(a − b) ≥ 3,762
+```
+
+Cada eleitor que troca de lado vale 2 votos de margem, porque sai de um candidato e entra no outro. Um novo eleitor vale só (a − b) voto de margem, já descontada a fração de branco e nulo.
+
+### a) Saída B→A necessária para cada saída A→B
+
+| X_AB (A→B) | θ_A sem mudar X_BA | **X_BA necessário** | Eleitores B→A |
+|---:|---:|---:|---:|
+| 0,0 % | 50,63 % | **3,82 %** | 2,04 mi |
+| 0,5 % | 50,41 % | 4,30 % | 2,29 mi |
+| 1,0 % | 50,20 % | 4,78 % | 2,55 mi |
+| 1,5 % | 49,98 % | 5,26 % | 2,80 mi |
+| 2,0 % | 49,77 % | 5,74 % | 3,06 mi |
+| 2,5 % | 49,55 % | 6,22 % | 3,32 mi |
+| 3,0 % | 49,34 % | 6,70 % | 3,57 mi |
+| 3,5 % | 49,12 % | 7,19 % | 3,83 mi |
+| 4,0 % | 48,91 % | 7,67 % | 4,08 mi |
+| 4,5 % | 48,69 % | 8,15 % | 4,34 mi |
+| 5,0 % | 48,48 % | 8,63 % | 4,60 mi |
+| *5,13 % (atual)* | *48,42 %* | ***8,75 %*** | *4,66 mi* |
+| 5,5 % | 48,26 % | 9,11 % | 4,85 mi |
+| 6,0 % | 48,05 % | 9,59 % | 5,11 mi |
+| 6,5 % | 47,83 % | 10,07 % | 5,37 mi |
+| 7,0 % | 47,62 % | 10,55 % | 5,62 mi |
+
+**Regra:** X_BA ≈ 3,82 % + 0,961 × X_AB. O coeficiente 0,961 é a razão entre os comparecentes das coortes A e B. Com X_AB ≈ 1,5 %, a saída B→A atual (5,2 %) já bastaria.
+
+### b) Faltantes do 1º turno adicionais necessários, por divisão A:B
+
+O modelo já supõe que ≈ 18,8 % dos faltantes votam, divididos ≈ 50:50 entre A e B. Isso quase não altera a diferença. A tabela mostra os faltantes **adicionais** necessários.
+
+| A:B dos novos | % dos faltantes (todos válidos) | % dos faltantes (com 15 % BN) | Pessoas (com BN) |
+|---|---:|---:|---:|
+| 55:45 | 112 % ❌ | 133 % ❌ | 44,4 mi |
+| 60:40 | 56 % | 66 % | 22,2 mi |
+| 65:35 | 37 % | 44 % | 14,8 mi |
+| 2:1 | 34 % | 40 % | 13,3 mi |
+| 70:30 | 28 % | 33 % | 11,1 mi |
+| 75:25 | 22 % | 27 % | 8,9 mi |
+| 80:20 | 19 % | 22 % | 7,4 mi |
+| 85:15 | 16 % | 19 % | 6,3 mi |
+| 90:10 | 14 % | 17 % | 5,6 mi |
+| 95:5 | 12 % | 15 % | 4,9 mi |
+| 100:0 | 11 % | 13 % | 4,4 mi |
+
+As divisões observadas nas pesquisas para esse grupo são pd ≈ 45:55 e qu ≈ 53:47. Nas duas, a conta não fecha: ambas ficam abaixo de 55:45.
+
+### c) Combinações das duas alavancas
+
+Cada célula mostra a % dos faltantes adicionais necessária, considerando 15 % de branco e nulo.
+
+| Troca de votos (B→A / A→B) | 55:45 | 60:40 | 2:1 | 75:25 |
+|---|---:|---:|---:|---:|
+| atual (5,2 % / 5,1 %) | 133 % ❌ | 66 % | 40 % | 27 % |
+| ±0,5 p.p. (5,7 % / 4,6 %) | 96 % | 48 % | 29 % | 19 % |
+| ±1,0 p.p. (6,2 % / 4,1 %) | 59 % | 30 % | 18 % | 12 % |
+| ±1,5 p.p. (6,7 % / 3,6 %) | 22 % | 11 % | 7 % | 4 % |
+| ±1,8 p.p. (7,0 % / 3,3 %) | 0 | 0 | 0 | 0 |
+
+Uma mudança de ±1 p.p. em cada sentido equivale a ≈ 0,8 dp da incerteza posterior (dp(X_BA) = 1,24 p.p., dp(X_AB) = 1,25 p.p.).
+
+### d) Probabilidade combinada e caminho mais provável
+
+**Priors assumidos (não há dados sobre eles):**
+- Choque de comparecimento dos faltantes: e ~ N(0, σ_e² · eleitorado), sem sinal imposto.
+- Fração de A entre os votos válidos dos novos eleitores: s ~ N(0,5; σ_s²). O centro 0,5 fica entre a pd (≈ 45 %) e a qu (≈ 53 %).
+- O choque é aplicado **depois** da ponderação pelas pesquisas. Ele representa um erro do modelo de comparecimento que as pesquisas não captam.
+
+| σ_e | σ_s | P(θ_A > 0,5) | X_BA \| vitória A | X_AB \| vitória A | Contrib. troca | Contrib. comparec. | Contrib. viés recordação |
+|---|---|---:|---:|---:|---|---|---|
+| 0 | — | 2,3 % | 6,5 % | 4,1 % | 2,48 mi (76 %) | 0 | 0,78 mi (24 %) |
+| 1 p.p. | 5 p.p. | 2,3 % | 6,5 % | 4,1 % | 2,46 mi (75 %) | 0,02 mi (1 %) | 0,79 mi (24 %) |
+| 2 p.p. | 5 p.p. | 2,4 % | 6,5 % | 4,1 % | 2,44 mi (74 %) | 0,10 mi (3 %) | 0,78 mi (23 %) |
+| 2 p.p. | 8 p.p. | 2,5 % | 6,5 % | 4,1 % | 2,39 mi (70 %) | 0,24 mi (7 %) | 0,78 mi (23 %) |
+| 3 p.p. | 8 p.p. | 3,0 % | 6,4 % | 4,3 % | 2,12 mi (62 %) | 0,60 mi (18 %) | 0,70 mi (20 %) |
+
+As contribuições são a média, nas simulações em que A vence, de quanto cada alavanca reduziu a diferença em relação ao esperado. O ESS das vitórias fica entre ≈ 180 e 260, então as contribuições são indicativas.
+
+**Ponto mais provável sobre a fronteira de virada** (método FORM: a combinação na fronteira que exige o menor desvio, medido em dp):
+- Comparecimento adicional **zero**.
+- X_BA = **7,03 %** (+1,81 p.p.) e X_AB = **3,34 %** (−1,79 p.p.).
+- Distância de ≈ 2,04 dp, igual para os dois conjuntos de priors testados.
+
+**Por que o comparecimento ajuda pouco:** ele só altera a margem pelo produto (quantidade de novos eleitores) × (desequilíbrio da divisão). Isso exige dois desvios independentes ao mesmo tempo, o que é um efeito de 2ª ordem. A troca de votos é um desvio só e conta em dobro.
+
+---
+
 ## 13. Limitações
 
 1. **n das subamostras desconhecido.** Todo n_eff é aproximação (Modelo 2), e o Modelo 1 é uma escolha ad hoc (σ_add = 5 p.p.). As tensões z ≈ −2 (C→B) e z ≈ +3 (BN+ABS→A) dependem dessa aproximação.
@@ -487,7 +593,8 @@ Em cada célula: E[θ_A] / P(θ_A > 0,5). A linha em negrito é a configuração
 9. **Decomposição da variância** feita de um fator por vez em torno da média (efeitos de primeira ordem). As interações são pequenas (soma das partes/total = 1,02).
 10. **Erro do 1º turno não foi aplicado ao 2º turno**, como pedido. Nenhum h_j recebeu sinal a priori.
 11. **λ e σ_r são escolhas de julgamento.** O valor recomendado (λ = 0,5, σ_r = 0,5 p.p.) segue a premissa de que, com o 1º turno recente, o erro de recordação é baixo, mas a matriz pd não deve ter peso total, por causa da inconsistência nº 5. A seção 12 mostra a amplitude de resultados.
-12. As probabilidades P(θ_A > 0,5) aqui são **funções das hipóteses**. Mudam materialmente com o Modelo 1, com viés comum de ±1 p.p., com horizonte longo ou com cenários extremos de retenção e comparecimento (grades acima). Não são previsões.
+12. **Comparecimento e divisão dos novos eleitores (seção 12b) usam priors assumidos**, sem dados. A conclusão de que eles pesam pouco vale para choques de até ±3 p.p. do eleitorado com divisão centrada em 50:50. Evidência de divisão muito favorável a A entre os faltantes mudaria essa conclusão.
+13. As probabilidades P(θ_A > 0,5) aqui são **funções das hipóteses**. Mudam materialmente com o Modelo 1, com viés comum de ±1 p.p., com horizonte longo ou com cenários extremos de retenção e comparecimento (grades acima). Não são previsões.
 
 ---
 
