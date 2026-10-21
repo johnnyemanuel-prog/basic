@@ -777,6 +777,10 @@ out(f"Ponto mais provável sobre a fronteira (só troca de votos): X_BA = "
     f"distância ≈ {dist:.2f} dp (dp X_BA {100 * sy:.2f}, dp X_AB {100 * sx:.2f} p.p.).")
 out()
 RES["virada"]["dist"] = dist
+cxy = wmean((S_tr["Q"][:, iA, 0] - xab0) * (S_tr["Q"][:, iB, 1] - xba0), w_all) / (sx * sy)
+RES["virada"].update(sdXAB=sx, sdXBA=sy, rho=cxy,
+                     formXBA=xba0 + (gap + 1) * a1 * sy ** 2 / den, formXAB=xab0 - (gap + 1) * a2 * sx ** 2 / den,
+                     thetaA=RES["completo"]["mean"], pA=RES["completo"]["pA"])
 
 with open("resultados_v2.md", "w") as f:
     f.write("\n".join(OUT) + "\n")
