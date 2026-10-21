@@ -7,6 +7,8 @@
 
 ---
 
+> **Atualização de 21/10:** há uma recalibração com 8 novas pesquisas e novas transferências em `ATUALIZACAO_2110.md` (modelo `modelo_v2.py`). Este relatório documenta a versão v1 e foi preservado sem alterações.
+
 ## 0. Resultado principal (configuração recomendada)
 
 **Hipóteses da configuração recomendada:**
