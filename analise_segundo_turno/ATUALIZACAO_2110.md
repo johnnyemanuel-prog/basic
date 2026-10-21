@@ -78,7 +78,7 @@ O diferencial de comparecimento declarado entre os convictos de A e de B (95,0 %
 
 **Parâmetros estimados** (média [IC 90 %], em %, para 25/10):
 
-| Parâmetro | Só pd (com datas) | pd + df + qu + pv | **Completo (+ pesquisas)** | v1 (completo, λ = 0,5) |
+| Parâmetro | Só pd (com datas) | pd + df + qu + pv | **Completo (+ pesquisas)** | v1 (referência aprox.) ¹ |
 |---|---|---|---|---|
 | R_A = A₁→A | 91,3 [87,7; 94,4] | 91,3 | **91,6 [88,4; 94,4]** | ≈ 91,9 [90,1; 93,6] |
 | X_AB = A₁→B | 5,2 [2,9; 8,1] | 5,2 | **5,0 [2,9; 7,4]** | ≈ 5,1 |
@@ -94,6 +94,8 @@ O diferencial de comparecimento declarado entre os convictos de A e de B (95,0 %
 | **θ_A (válidos)** | 47,6 [45,4; 49,8] | 48,5 [46,4; 50,6] | **48,7 [47,6; 49,8]** | 48,4 [47,2; 49,7] |
 
 As linhas q_g representam intenção declarada normalizada, antes da resolução de indecisos e do comparecimento.
+
+¹ A coluna do v1 é aproximada: as linhas dos eliminados vêm do modelo completo do v1 com λ = 1, e θ_A vem da configuração recomendada (λ = 0,5, horizonte de 11 dias).
 
 **Leitura:**
 - **Retenção e troca direta entre finalistas:** os centros são os mesmos do v1, mas os intervalos ficaram mais largos. A única fonte continua sendo a matriz pd de cerca de 11/10, agora com desconto temporal de 14 dias.
