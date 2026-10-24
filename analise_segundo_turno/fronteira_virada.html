@@ -66,7 +66,7 @@ td:first-child,th:first-child{text-align:left}
 <div class="wrap">
   <header style="display:grid;gap:8px">
     <h1>Fronteira de virada</h1>
-    <p class="lede">Cada ponto do plano é uma combinação de troca de votos entre os eleitores dos dois finalistas. Acima da linha, A chega a 50% + 1 dos votos válidos; abaixo, não. A elipse mostra onde o modelo espera que a troca real esteja. Calibração com as pesquisas até 20/10 e eleição em 25/10. Mova o controle de faltantes para ver a fronteira descer quando mais abstencionistas do 1º turno vão votar.</p>
+    <p class="lede">Cada ponto do plano é uma combinação de troca de votos entre os eleitores dos dois finalistas. Acima da linha, A chega a 50% + 1 dos votos válidos; abaixo, não. A elipse mostra onde o modelo espera que a troca real esteja. Calibração com as pesquisas até 22/10 e eleição em 25/10. Mova o controle de faltantes para ver a fronteira descer quando mais abstencionistas do 1º turno vão votar.</p>
   </header>
 
   <div class="controls" role="group" aria-label="Cenário de comparecimento">
@@ -99,18 +99,18 @@ td:first-child,th:first-child{text-align:left}
   <div class="chartbox" id="box">
     <svg id="chart" viewBox="0 0 900 560" role="img" aria-labelledby="chartTitle chartDesc">
       <title id="chartTitle">Fronteira de virada: saída de B para A necessária versus saída de A para B</title>
-      <desc id="chartDesc">Eixo horizontal: percentual dos eleitores de A no 1º turno que votam em B. Eixo vertical: percentual dos eleitores de B que votam em A. Linha azul: fronteira sem mudança no comparecimento, de 3,32% a 11,0%. Ponto atual em 5,07% e 5,34%, abaixo da fronteira. Ponto de virada mais provável em 3,68% e 6,86%.</desc>
+      <desc id="chartDesc">Eixo horizontal: percentual dos eleitores de A no 1º turno que votam em B. Eixo vertical: percentual dos eleitores de B que votam em A. Linha azul: fronteira sem mudança no comparecimento, de 2,15% a 9,85%. Ponto atual em 4,46% e 3,93%, abaixo da fronteira. Ponto de virada mais provável em 3,12% e 5,15%.</desc>
     </svg>
     <div class="tip" id="tip" hidden></div>
   </div>
 
-  <div class="eq">X_BA necessário = 5,34% + [3,041 mi + 1 − 1,024 mi·(5,07 − X_AB) − 0,277 mi·x·(a − b)] / 1,065 mi
+  <div class="eq">X_BA necessário = 3,93% + [2,680 mi + 1 − 1,025 mi·(4,46 − X_AB) − 0,282 mi·x·(a − b)] / 1,066 mi
 (X em p.p.; x = % dos 33,47 mi de faltantes; a − b = desequilíbrio da divisão dos novos eleitores)</div>
 
   <div class="notes">
-    <p><b>Leitura.</b> O ponto “hoje” (5,1% de A indo para B; 5,3% de B indo para A) está cerca de 1,5 desvio-padrão abaixo da fronteira azul. Na calibração anterior (até 14/10) eram 2 desvios-padrão: a diferença a fechar caiu de 3,76 para 3,04 milhões de votos, e a troca direta ficou mais incerta porque a única matriz disponível é de cerca de 11/10. O caminho mais curto até a fronteira leva ao ponto roxo: 3,7% e 6,9%, sem comparecimento extra.</p>
+    <p><b>Leitura.</b> O ponto “hoje” (4,5% de A indo para B; 3,9% de B indo para A) está cerca de 2,3 desvios-padrão abaixo da fronteira azul. A diferença a fechar caiu para 2,68 milhões de votos, mas a nova matriz pd (19–21/10) mediu a troca direta com mais precisão e com o centro levemente a favor de B; por isso o ponto ficou mais longe da fronteira que na calibração de 21/10 (1,5 desvio-padrão). O caminho mais curto até a fronteira, considerando a correlação entre os dois fluxos, leva ao ponto roxo: 3,1% e 5,2%, sem comparecimento extra.</p>
     <p>A linha laranja só se afasta da azul quando há muitos faltantes <i>e</i> uma divisão bem favorável a A. Com 50:50 as duas coincidem. É por isso que o comparecimento pesa pouco no modelo.</p>
-    <p>Base: modelo v2 (16 pesquisas até 20/10, transferências de pd, df, qu e pv com desconto pela data, peso 0,5 na matriz pd, viés de recordação de 0,5 p.p., eleição em 25/10). Todo o resto fica fixo. São equações condicionais, não previsões.</p>
+    <p>Base: modelo v3 (18 pesquisas até 22/10, transferências de pd (duas matrizes), df, qu e pv com desconto pela data, peso 0,5 na matriz pd, viés de recordação de 0,5 p.p., eleição em 25/10). Todo o resto fica fixo. São equações condicionais, não previsões.</p>
   </div>
 
   <details>
@@ -123,13 +123,13 @@ td:first-child,th:first-child{text-align:left}
 (function(){
   // Constantes do modelo (resultados.json → virada)
   // Calibração v2 (dados até 20/10) — resultados_v2.json → virada
-  const GAP=3041411.28, NA=51221599.08, NB=53266351.46, XAB0=0.0507127, XBA0=0.0534347,
-        NABS=33470000, FBN=0.1722104, SDX=0.0137327, SDY=0.0140471, RHO=0.283,
-        FORM={x:0.0367843, y:0.0685900};
+  const GAP=2680137.07, NA=51235113.62, NB=53283525.04, XAB0=0.0446140, XBA0=0.0392883,
+        NABS=33470000, FBN=0.1580520, SDX=0.0087255, SDY=0.0082090, RHO=0.130,
+        FORM={x:0.0312083, y:0.0515478};
   const need=(xab,x,s)=> XBA0 + (GAP+1 - 2*NA*(XAB0-xab) - NABS*x*(1-FBN)*(2*s-1)) / (2*NB);
 
   const W=900,H=560,M={l:64,r:28,t:20,b:56};
-  const X0=0,X1=0.08,Y0=0,Y1=0.13;
+  const X0=0,X1=0.08,Y0=0,Y1=0.11;
   const sx=v=>M.l+(v-X0)/(X1-X0)*(W-M.l-M.r);
   const sy=v=>H-M.b-(v-Y0)/(Y1-Y0)*(H-M.t-M.b);
   const inv=px=>X0+(px-M.l)/(W-M.l-M.r)*(X1-X0);
@@ -156,7 +156,7 @@ td:first-child,th:first-child{text-align:left}
     const clipY=y=>Math.max(Y0,Math.min(Y1,y));
     let d=`M${sx(X0)},${sy(Y1)} `+xs.map(x=>`L${sx(x)},${sy(clipY(need(x,0,0.5)))}`).join(' ')+` L${sx(X1)},${sy(Y1)} Z`;
     el('path',{d,fill:'var(--win-fill)'});
-    el('text',{x:sx(0.004),y:sy(0.122),class:'dl2'}).textContent='A chega a 50% + 1';
+    el('text',{x:sx(0.004),y:sy(0.104),class:'dl2'}).textContent='A chega a 50% + 1';
     el('text',{x:sx(0.078),y:sy(0.012),class:'dl2','text-anchor':'end'}).textContent='B mantém a maioria';
 
     // elipses 1 e 2 dp
@@ -165,7 +165,7 @@ td:first-child,th:first-child{text-align:left}
         pts.push(`${sx(XAB0+k*SDX*u)},${sy(XBA0+k*SDY*v)}`);} return 'M'+pts.join('L')+'Z';};
     el('path',{d:ell(2),fill:'none',stroke:'var(--fg2)','stroke-width':1,'stroke-dasharray':'3 4'});
     el('path',{d:ell(1),fill:'none',stroke:'var(--fg2)','stroke-width':1.2});
-    el('text',{x:sx(XAB0-2*SDX)-6,y:sy(XBA0-0.6*SDY),class:'dl2','text-anchor':'end'}).textContent='2 dp';
+    el('text',{x:sx(XAB0-2*SDX)-6,y:sy(XBA0-1.6*SDY),class:'dl2','text-anchor':'end'}).textContent='2 dp';
     el('text',{x:sx(XAB0+SDX)+6,y:sy(XBA0-0.4*SDY),class:'dl2'}).textContent='1 dp';
 
     // linhas de fronteira
@@ -181,9 +181,9 @@ td:first-child,th:first-child{text-align:left}
     el('line',{x1:sx(XAB0),y1:sy(XBA0),x2:sx(FORM.x),y2:sy(FORM.y),stroke:'var(--form)','stroke-width':1.5,'stroke-dasharray':'5 4'});
     el('circle',{cx:sx(FORM.x),cy:sy(FORM.y),r:7,fill:'var(--form)',stroke:'var(--ring)','stroke-width':2});
     el('text',{x:sx(FORM.x)-12,y:sy(FORM.y)-12,'text-anchor':'end',class:'dl'}).textContent='virada mais provável';
-    el('text',{x:sx(FORM.x)-12,y:sy(FORM.y)+4,'text-anchor':'end',class:'dl2'}).textContent='3,7% / 6,9%';
+    el('text',{x:sx(FORM.x)-12,y:sy(FORM.y)+4,'text-anchor':'end',class:'dl2'}).textContent='3,1% / 5,2%';
     el('circle',{cx:sx(XAB0),cy:sy(XBA0),r:7,fill:'var(--pt)',stroke:'var(--ring)','stroke-width':2});
-    el('text',{x:sx(XAB0)+12,y:sy(XBA0)+4,class:'dl'}).textContent='hoje: 5,1% / 5,3%';
+    el('text',{x:sx(XAB0)+12,y:sy(XBA0)+4,class:'dl'}).textContent='hoje: 4,5% / 3,9%';
 
     // camada de hover
     const g=el('g',{});
